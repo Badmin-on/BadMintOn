@@ -1,0 +1,37 @@
+[
+  {
+    "name": "올리버 (OLIVER)",
+    "url": "http://www.kingkasports.com/main/html.php?htmid=page%2Fbrand%2Fsub2.html&top=3&sub=2",
+    "description": "대회 정보 확인",
+    "iconText": "O",
+    "iconColor": "#3498db"
+  },
+  {
+    "name": "위꾹라이브",
+    "url": "https://wekkuklive.com",
+    "description": "실시간 중계 및 정보",
+    "iconText": "W",
+    "iconColor": "#2ecc71"
+  },
+  {
+    "name": "스포넷",
+    "url": "https://sponet.co.kr/BM/m/index.jsp",
+    "description": "대회 신청 및 결과",
+    "iconText": "S",
+    "iconColor": "#e74c3c"
+  },
+  {
+    "name": "딱플",
+    "url": "http://www.ddakplay.com",
+    "description": "대회 정보 및 커뮤니티",
+    "iconText": "D",
+    "iconColor": "#f1c40f"
+  },
+  {
+    "name": "배프 (Baef)",
+    "url": "https://bf.oopy.io/",
+    "description": "대회 정보 및 소셜",
+    "iconText": "B",
+    "iconColor": "#9b59b6"
+  }
+]

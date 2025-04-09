@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배드민턴 허브 - 배드민턴의 모든 것</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --accent: #e74c3c;
+            --text: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+            position: relative;
+        }
+
+        nav ul li a {
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: all 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--secondary);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            margin-left: 2rem;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 0.2rem;
+            width: 200px;
+            color: var(--text); /* Added text color for input */
+        }
+
+        .search-box span { /* Style for search icon */
+            color: var(--primary);
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-left: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #27ae60;
+        }
+
+        /* 히어로 섹션 */
+        .hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/1200x500/2c3e50/ecf0f1?text=Badminton+Action') center/cover no-repeat; /* Placeholder image */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-large {
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        /* 콘텐츠 그리드 & 섹션 공통 */
+        section {
+             padding: 3rem 0; /* Added default padding for sections */
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem; /* Adjusted margin */
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px; /* Space for the underline */
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0; /* Positioned at the bottom */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+
+        .filter-controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-btn:hover:not(.active) { /* Hover effect only for non-active buttons */
+            background-color: #f5f5f5;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s; /* Added box-shadow transition */
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15); /* Enhanced hover shadow */
+        }
+
+        .card-image {
+            height: 180px;
+            overflow: hidden;
+            background-color: #eee; /* Placeholder background */
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .content-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-content h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem; /* Slightly larger heading */
+        }
+
+        .card-content p {
+            font-size: 0.95rem; /* Slightly larger paragraph */
+            color: #555; /* Darker grey */
+            margin-bottom: 1rem; /* Added margin */
+        }
+
+        .content-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #777;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-actions {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-actions .btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .card-actions span { /* Style for likes/views */
+            font-size: 0.9rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* 특징 섹션 (Features/Lessons) */
+        .features-section {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            transition: all 0.3s;
+            border-radius: 10px;
+        }
+
+        .feature-card:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+
+        /* 라이브 스트리밍 섹션 */
+        .live-section {
+            background-color: #f9f9f9;
+        }
+
+        .live-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: start; /* Align items to the top */
+        }
+
+        .live-player {
+            background-color: black;
+            border-radius: 10px;
+            aspect-ratio: 16 / 9; /* Maintain aspect ratio */
+            height: auto; /* Remove fixed height */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .live-player iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .live-badge::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .official-source {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+
+        .live-player .fullscreen-btn { /* Style for fullscreen button */
+            position: absolute;
+            bottom: 1rem; /* Positioned near the official source */
+            left: 1rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            z-index: 10;
+            transition: background-color 0.3s;
+        }
+        .live-player .fullscreen-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+
+        .live-schedule {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            /* height: 450px; Removed fixed height */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1); /* Added shadow */
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .schedule-header h3 {
+            font-size: 1.3rem; /* Larger heading */
+        }
+
+        .schedule-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1rem;
+        }
+
+        .schedule-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            color: #555;
+        }
+
+        .schedule-tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .schedule-tab:hover:not(.active) {
+            color: var(--primary);
+        }
+
+        .schedule-list {
+            /* Removed max-height, overflow, padding-right and scrollbar styles */
+        }
+
+        .schedule-item {
+            padding: 1rem 0.5rem; /* Adjusted padding */
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+        .schedule-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .schedule-time {
+            font-weight: bold;
+            min-width: 55px;
+            color: var(--primary);
+        }
+
+        .schedule-match {
+            flex-grow: 1;
+            margin-left: 1rem;
+        }
+
+        .schedule-match h4 {
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+        }
+
+        .schedule-match p {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .schedule-status {
+            margin-left: 1rem;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 50px;
+            font-weight: 500;
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        .status-live { background-color: var(--accent); color: white; }
+        .status-upcoming { background-color: #f1c40f; color: #333; } /* Changed text color for better contrast */
+        .status-completed { background-color: #95a5a6; color: white; }
+
+        /* 마켓플레이스 섹션 */
+        .marketplace-section {
+            /* padding: 3rem 0; */ /* Using default section padding */
+        }
+
+        .product-card {
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            z-index: 5; /* Ensure it's above image */
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        /* 커뮤니티 섹션 */
+        .community-section {
+            background-color: #f9f9f9;
+        }
+
+        .community-grid { /* Using grid for layout */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Responsive columns */
+            gap: 1.5rem;
+        }
+
+        .community-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            /* margin-bottom: 1.5rem; Removed margin */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s;
+        }
+        .community-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .community-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Align items vertically */
+            margin-bottom: 1rem;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            gap: 0.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            background-color: #eee; /* Placeholder background */
+        }
+        .user-info div h4 { /* User name */
+            font-size: 1rem;
+            margin-bottom: 0.1rem;
+        }
+        .user-info div span { /* Post time */
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .post-title { /* Added style for post title */
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .post-excerpt { /* Added style for post excerpt */
+            color: #555;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 1rem;
+            color: #777;
+            font-size: 0.9rem; /* Consistent size */
+            align-items: center; /* Align icons and text */
+        }
+        .post-stats span { /* Individual stat item */
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* 유튜브 영상 섹션 (기존 채널 섹션 수정) */
+        .youtube-section {
+            background-color: white;
+        }
+
+        .channel-grid { /* Grid container for video cards */
+            display: grid;
+            /* Adjust columns for typical video grid (e.g., 4 columns on wider screens) */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem; /* Adjust gap between cards */
+        }
+
+        /* New styles for individual video cards */
+        .video-card {
+            background-color: white; /* Keep background */
+            /* No border-radius or overflow needed on the card itself if thumbnail has it */
+            transition: transform 0.3s; /* Optional hover effect */
+        }
+        .video-card:hover {
+             transform: translateY(-3px); /* Optional hover effect */
+        }
+
+        .video-card a { /* Ensure link covers the card */
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .video-thumbnail-container {
+            position: relative;
+            width: 100%;
+            /* Maintain aspect ratio (16:9 is common for YouTube) */
+            padding-top: 56.25%; /* 9 / 16 * 100% */
+            overflow: hidden;
+            border-radius: 8px; /* Rounded corners for thumbnail */
+            background-color: #eee; /* Placeholder background */
+            margin-bottom: 0.8rem; /* Space below thumbnail */
+        }
+
+        .video-thumbnail-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the container */
+            border-radius: 8px; /* Match container rounding */
+        }
+
+        .video-details {
+            padding: 0 0.2rem; /* Small horizontal padding */
+            /* If channel icon is added later, use flexbox here */
+        }
+
+        .video-title {
+            font-weight: 500; /* Medium weight */
+            font-size: 1rem; /* Adjust as needed */
+            color: var(--text);
+            margin-bottom: 0.4rem; /* Space below title */
+            /* Limit title to 2 lines with ellipsis */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4; /* Adjust line height for 2 lines */
+            min-height: 2.8em; /* Ensure space for 2 lines (2 * 1.4em) */
+        }
+
+        /* Styles for future channel info/meta (placeholder) */
+        .video-channel-info,
+        .video-meta {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.3;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Remove or comment out old conflicting styles if necessary */
+        /*
+        .channel-card { ... }
+        .channel-banner { ... }
+        .channel-info { ... }
+        .channel-avatar { ... }
+        .channel-stats { ... }
+        .channel-videos { ... }
+        .channel-video { ... }
+        .video-thumbnail { ... } -> Replaced by .video-thumbnail-container
+        .video-info { ... } -> Replaced by .video-details
+        */
+
+        /* 푸터 */
+        footer {
+            background-color: var(--dark);
+            color: #ccc; /* Lighter text color */
+            padding: 3rem 0 1.5rem;
+            font-size: 0.95rem; /* Base font size for footer */
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            color: white; /* White heading */
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links li a {
+            transition: all 0.3s;
+            color: #ccc; /* Match base footer text color */
+        }
+
+        .footer-links li a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+
+        .social-links { /* Added styles for social links */
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .social-links a {
+            color: #ccc;
+            font-size: 1.3rem;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: var(--secondary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: #aaa; /* Slightly dimmer copyright text */
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 992px) {
+            .live-container {
+                grid-template-columns: 1fr;
+            }
+            .live-schedule {
+                /* max-height: 400px; */ /* Keep schedule height flexible */
+            }
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Adjust feature card size */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: stretch; /* Stretch items */
+            }
+            .logo {
+                margin-bottom: 1rem;
+                justify-content: center; /* Center logo */
+            }
+            nav {
+                margin: 0.5rem 0;
+            }
+            nav ul {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0 1.5rem; /* Add gap between nav items */
+            }
+            nav ul li {
+                margin-left: 0; /* Remove left margin */
+            }
+            .user-actions {
+                margin-top: 1rem;
+                flex-direction: column; /* Stack search and login */
+                align-items: stretch; /* Stretch items */
+                gap: 1rem;
+            }
+            .search-box {
+                margin-left: 0;
+                width: 100%; /* Full width search */
+            }
+            .search-box input {
+                width: 100%; /* Full width input */
+            }
+            .user-actions .btn {
+                margin-left: 0;
+                width: 100%; /* Full width button */
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+            .footer-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjust footer columns */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                width: 95%; /* More width on small screens */
+            }
+            nav ul {
+                gap: 0.5rem 1rem; /* Adjust gap */
+            }
+            .hero-buttons {
+                flex-direction: column;
+                width: 80%; /* Limit button width */
+                max-width: 300px;
+            }
+            .content-grid, .features-grid, .channel-grid, .community-grid {
+                grid-template-columns: 1fr; /* Single column layout */
+            }
+            .live-player {
+                border-radius: 0; /* Remove radius on small screens */
+            }
+            .live-schedule {
+                border-radius: 0;
+            }
+            .footer-grid {
+                text-align: center; /* Center footer content */
+            }
+            .social-links {
+                justify-content: center; /* Center social links */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="#">배드민턴<span>허브</span>Mint:ON</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">홈</a></li>
+                    <li><a href="#live">라이브/VOD</a></li>
+                    <li><a href="#tournaments">대회</a></li>
+                    <li><a href="#lessons">레슨</a></li>
+                    <li><a href="#market">마켓</a></li>
+                    <li><a href="#community">커뮤니티</a></li>
+                    <li><a href="admin.html" target="_blank" style="color: var(--accent);">관리자</a></li> <!-- Added Admin Link -->
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="검색어를 입력하세요">
+                    <span><i class="fas fa-search"></i></span> <!-- Font Awesome Icon -->
+                </div>
+                <button class="btn">로그인</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero" id="home">
+        <h1>배드민턴의 모든 것을 한곳에서</h1>
+        <p>대회 정보, 실시간 중계, 레슨 정보부터 용품 구매까지. 배드민턴 애호가를 위한 올인원 플랫폼입니다.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-large">지금 시작하기</button>
+            <button class="btn btn-large btn-outline">라이브 중계 보기</button>
+        </div>
+    </section>
+
+    <!-- 특징 섹션 (레슨 등) -->
+    <section class="features-section" id="lessons">
+        <div class="container">
+            <h2 class="section-title">주요 기능 및 레슨</h2>
+            <div class="features-grid">
+                <!-- Feature Card 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3>전문가 레슨</h3>
+                    <p>검증된 코치들의 수준별 맞춤 레슨을 찾아보세요.</p>
+                </div>
+                <!-- Feature Card 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+                    <h3>대회 정보</h3>
+                    <p>전국 아마추어 및 프로 대회 일정을 확인하고 참가 신청하세요.</p>
+                </div>
+                <!-- Feature Card 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3>클럽 찾기</h3>
+                    <p>내 주변의 배드민턴 클럽을 쉽게 찾고 가입할 수 있습니다.</p>
+                </div>
+                 <!-- Feature Card 4 -->
+                 <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-video"></i></div>
+                    <h3>기술 VOD</h3>
+                    <p>다양한 배드민턴 기술 강좌 비디오를 시청하세요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 라이브 스트리밍 섹션 -->
+    <section class="live-section" id="live">
+        <div class="container">
+            <h2 class="section-title">라이브 중계 & 경기 일정</h2>
+            <div class="live-container">
+                <div class="live-player">
+                    <div class="live-badge">LIVE</div>
+                    <div class="official-source">공식 중계: eastmantvv.blogspot.com</div>
+                    <button class="fullscreen-btn" title="전체 화면"><i class="fas fa-expand"></i></button> <!-- Fullscreen Button -->
+                    <!-- Placeholder for actual iframe or player -->
+                    <iframe id="live-iframe" src="https://eastmantvv.blogspot.com" allowfullscreen title="Live Badminton Stream"></iframe>
+                    <!-- Fallback content if iframe fails -->
+                    <!-- <p>라이브 스트리밍 준비 중...</p> -->
+                </div>
+                <div class="live-schedule">
+                    <div class="schedule-header">
+                        <h3>경기 일정</h3>
+                        <a href="#" class="btn">전체 일정</a>
+                    </div>
+                    <div class="schedule-tabs">
+                        <div class="schedule-tab active">오늘</div>
+                        <div class="schedule-tab">내일</div>
+                        <div class="schedule-tab">이번 주</div>
+                    </div>
+                    <div class="schedule-list">
+                        <div class="schedule-item">
+                            <div class="schedule-time">09:30</div>
+                            <div class="schedule-match">
+                                <h4>남자 단식 8강</h4>
+                                <p>김민수 vs 이준호</p>
+                            </div>
+                            <div class="schedule-status status-live">LIVE</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">11:00</div>
+                            <div class="schedule-match">
+                                <h4>여자 단식 준결승</h4>
+                                <p>박소현 vs 정미라</p>
+                            </div>
+                            <div class="schedule-status status-upcoming">예정</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">13:30</div>
+                            <div class="schedule-match">
+                                <h4>남자 복식 결승</h4>
+                                <p>김/이 조 vs 박/최 조</p>
+                            </div>
+                            <div class="schedule-status status-upcoming">예정</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">15:00</div>
+                            <div class="schedule-match">
+                                <h4>여자 복식 결승</h4>
+                                <p>정/한 조 vs 김/윤 조</p>
+                            </div>
+                            <div class="schedule-status status-upcoming">예정</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">16:30</div>
+                            <div class="schedule-match">
+                                <h4>혼합 복식 결승</h4>
+                                <p>서/김 조 vs 최/정 조</p>
+                            </div>
+                            <div class="schedule-status status-upcoming">예정</div>
+                        </div>
+                         <div class="schedule-item">
+                            <div class="schedule-time">18:00</div>
+                            <div class="schedule-match">
+                                <h4>시상식</h4>
+                                <p>모든 경기 종료 후</p>
+                            </div>
+                            <div class="schedule-status status-upcoming">예정</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 인기 콘텐츠 섹션 (대회 하이라이트 등) -->
+    <section id="tournaments">
+        <div class="container">
+            <h2 class="section-title">인기 콘텐츠 & 대회 하이라이트</h2>
+            <div class="filter-controls">
+                <button class="filter-btn active">전체</button>
+                <button class="filter-btn">하이라이트</button>
+                <button class="filter-btn">인터뷰</button>
+                <button class="filter-btn">기술 분석</button>
+                <button class="filter-btn">경기 풀영상</button>
+            </div>
+            <div class="content-grid">
+                <!-- 콘텐츠 카드 1 -->
+                <div class="content-card">
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/300x180/3498db/ffffff?text=Smash+Technique" alt="스매시 기술">
+                    </div>
+                    <div class="card-content">
+                        <div class="content-meta">
+                            <span>기술 분석</span>
+                            <span>조회수 12.5K</span>
+                        </div>
+                        <h3>프로처럼 스매시 치는 방법</h3>
+                        <p>효과적인 스매시 기술을 배워 경기력을 향상시키세요.</p>
+                        <div class="card-actions">
+                            <button class="btn">보러가기</button>
+                            <span><i class="fas fa-thumbs-up"></i> 245</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 콘텐츠 카드 2 -->
+                <div class="content-card">
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/300x180/e74c3c/ffffff?text=Seoul+Open+Final" alt="서울 오픈 결승">
+                    </div>
+                    <div class="card-content">
+                        <div class="content-meta">
+                            <span>하이라이트</span>
+                            <span>실시간</span>
+                        </div>
+                        <h3>2025 서울 오픈 결승 하이라이트</h3>
+                        <p>국내 최고 선수들의 박진감 넘치는 승부를 지금 확인하세요.</p>
+                        <div class="card-actions">
+                            <button class="btn">시청하기</button>
+                            <span><i class="fas fa-eye"></i> 1.8K</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 콘텐츠 카드 3 -->
+                <div class="content-card">
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/300x180/2ecc71/ffffff?text=Footwork+Lesson" alt="풋워크 레슨">
+                    </div>
+                    <div class="card-content">
+                        <div class="content-meta">
+                            <span>레슨</span>
+                            <span>초급자용</span>
+                        </div>
+                        <h3>기초 풋워크 마스터하기</h3>
+                        <p>올바른 발동작으로 코트 전체를 효율적으로 커버하는 법을 배워보세요.</p>
+                        <div class="card-actions">
+                            <button class="btn">레슨 상세보기</button>
+                            <span><i class="fas fa-star"></i> 4.9</span>
+                        </div>
+                    </div>
+                </div>
+                 <!-- 콘텐츠 카드 4 (추가) -->
+                <div class="content-card">
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/300x180/9b59b6/ffffff?text=Player+Interview" alt="선수 인터뷰">
+                    </div>
+                    <div class="card-content">
+                        <div class="content-meta">
+                            <span>인터뷰</span>
+                            <span>어제</span>
+                        </div>
+                        <h3>우승자 인터뷰: 김민수 선수</h3>
+                        <p>서울 오픈 남자 단식 우승자 김민수 선수의 소감을 들어보세요.</p>
+                        <div class="card-actions">
+                            <button class="btn">영상 보기</button>
+                            <span><i class="fas fa-comments"></i> 58</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 동호인 대회 플랫폼 섹션 -->
+    <section class="tournament-platforms-section" style="background-color: white;">
+        <div class="container">
+            <h2 class="section-title">동호인 대회 플랫폼 바로가기</h2>
+            <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+
+                <!-- Sponet -->
+                <a href="https://sponet.co.kr/BM/m/index.jsp" target="_blank" rel="noopener noreferrer" class="feature-card" style="padding: 1.5rem;">
+                    <div class="feature-icon" style="font-size: 2.5rem; margin-bottom: 0.8rem;"><img src="https://via.placeholder.com/50x50/e74c3c/ffffff?text=S" alt="Sponet Logo" style="border-radius: 5px;"></div>
+                   <h3 style="font-size: 1.1rem;">스포넷</h3>
+                   <p style="font-size: 0.9rem;">대회 신청 및 결과</p>
+               </a>
+                <!-- Wekkuk Live -->
+                <a href="https://wekkuklive.com" target="_blank" rel="noopener noreferrer" class="feature-card" style="padding: 1.5rem;">
+                     <div class="feature-icon" style="font-size: 2.5rem; margin-bottom: 0.8rem;"><img src="https://via.placeholder.com/50x50/2ecc71/ffffff?text=W" alt="Wekkuk Live Logo" style="border-radius: 5px;"></div>
+                    <h3 style="font-size: 1.1rem;">위꾹라이브</h3>
+                    <p style="font-size: 0.9rem;">실시간 중계 및 정보</p>
+                </a>
+                
+                <!-- Baef -->
+                <a href="https://bf.oopy.io/" target="_blank" rel="noopener noreferrer" class="feature-card" style="padding: 1.5rem;">
+                    <div class="feature-icon" style="font-size: 2.5rem; margin-bottom: 0.8rem;"><img src="https://via.placeholder.com/50x50/9b59b6/ffffff?text=B" alt="Baef Logo" style="border-radius: 5px;"></div>
+                   <h3 style="font-size: 1.1rem;">배프 (Baef)</h3>
+                   <p style="font-size: 0.9rem;">대회 정보 및 소셜</p>
+               </a>
+                <!-- Ddakplay -->
+                <a href="http://www.ddakplay.com" target="_blank" rel="noopener noreferrer" class="feature-card" style="padding: 1.5rem;">
+                     <div class="feature-icon" style="font-size: 2.5rem; margin-bottom: 0.8rem;"><img src="https://via.placeholder.com/50x50/f1c40f/ffffff?text=D" alt="Ddakplay Logo" style="border-radius: 5px;"></div>
+                    <h3 style="font-size: 1.1rem;">딱플</h3>
+                    <p style="font-size: 0.9rem;">대회 정보 및 커뮤니티</p>
+                </a>
+              
+            </div>
+        </div>
+    </section>
+
+     <!-- 마켓플레이스 섹션 -->
+    <section class="marketplace-section" id="market">
+        <div class="container">
+            <h2 class="section-title">배드민턴 마켓</h2>
+             <div class="filter-controls">
+                <button class="filter-btn active">전체</button>
+                <button class="filter-btn">라켓</button>
+                <button class="filter-btn">셔틀콕</button>
+                <button class="filter-btn">신발</button>
+                <button class="filter-btn">의류</button>
+                <button class="filter-btn">액세서리</button>
+            </div>
+            <div class="content-grid">
+                <!-- Product Card 1 -->
+                <div class="content-card product-card">
+                     <div class="product-badge">신상품</div>
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/300x180/f1c40f/333333?text=Racket+Pro+X1" alt="배드민턴 라켓">
+                    </div>
+                    <div class="card-content">
+                        <div class="content-meta">
+                            <span>라켓</span>
+                            <span>브랜드 A</span>
+                        </div>
+                        <h3>프로페셔널 카본 라켓 X1</h3>
+                        <p>최신 기술이 적용된 경량 고탄성 라켓입니다.</p>
+                        <div class="product-price">₩185,000</div>
+                        <div class="card-actions">
+                            <button class="btn">상세보기</button>
+                            <span><i class="fas fa-heart"></i> 120</span>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Product Card 2 -->
+                <div class="content-card product-card">
+                     <div class="product-badge" style="background-color: var(--secondary);">할인중</div>
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/300x180/1abc9c/ffffff?text=Shuttlecock+Pack" alt="셔틀콕">
+                    </div>
+                    <div class="card-content">
+                        <div class="content-meta">
+                            <span>셔틀콕</span>
+                            <span>브랜드 B</span>
+                        </div>
+                        <h3>프리미엄 거위깃털 셔틀콕 (12개입)</h3>
+                        <p>내구성과 비행 안정성이 뛰어난 경기용 셔틀콕.</p>
+                        <div class="product-price"><span style="text-decoration: line-through; color: #999; font-size: 1rem; margin-right: 5px;">₩25,000</span>₩22,500</div>
+                        <div class="card-actions">
+                            <button class="btn">장바구니</button>
+                            <span><i class="fas fa-star"></i> 4.8</span>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Product Card 3 -->
+                <div class="content-card product-card">
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/300x180/e67e22/ffffff?text=Badminton+Shoes" alt="배드민턴화">
+                    </div>
+                    <div class="card-content">
+                        <div class="content-meta">
+                            <span>신발</span>
+                            <span>브랜드 C</span>
+                        </div>
+                        <h3>에어 쿠션 배드민턴화 Z3</h3>
+                        <p>접지력과 쿠셔닝이 강화된 전문 배드민턴화.</p>
+                        <div class="product-price">₩110,000</div>
+                        <div class="card-actions">
+                            <button class="btn">사이즈 선택</button>
+                            <span><i class="fas fa-shopping-cart"></i> 85</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 커뮤니티 섹션 -->
+    <section class="community-section" id="community">
+        <div class="container">
+            <h2 class="section-title">커뮤니티 게시판</h2>
+             <div class="filter-controls">
+                <button class="filter-btn active">전체</button>
+                <button class="filter-btn">자유게시판</button>
+                <button class="filter-btn">질문/답변</button>
+                <button class="filter-btn">클럽 홍보</button>
+                <button class="filter-btn">용품 후기</button>
+            </div>
+            <div class="community-grid">
+                <!-- Community Card 1 -->
+                <div class="community-card">
+                    <div class="community-header">
+                        <div class="user-info">
+                            <img src="https://via.placeholder.com/40x40/7f8c8d/ffffff?text=U1" alt="User Avatar" class="user-avatar">
+                            <div>
+                                <h4>스매시킹</h4>
+                                <span>2시간 전</span>
+                            </div>
+                        </div>
+                        <span style="font-size: 0.9rem; color: #777;">자유게시판</span>
+                    </div>
+                    <h3 class="post-title">오늘 저녁 같이 게임하실 분? (서울 강남)</h3>
+                    <p class="post-excerpt">강남역 근처 체육관에서 7시부터 9시까지 같이 운동하실 분 2명 구합니다. 실력은 중급 정도면 좋겠어요!</p>
+                    <div class="post-stats">
+                        <span><i class="fas fa-eye"></i> 58</span>
+                        <span><i class="fas fa-comment"></i> 12</span>
+                        <span><i class="fas fa-thumbs-up"></i> 5</span>
+                    </div>
+                </div>
+                 <!-- Community Card 2 -->
+                <div class="community-card">
+                    <div class="community-header">
+                        <div class="user-info">
+                            <img src="https://via.placeholder.com/40x40/34495e/ffffff?text=U2" alt="User Avatar" class="user-avatar">
+                            <div>
+                                <h4>민턴초보</h4>
+                                <span>5시간 전</span>
+                            </div>
+                        </div>
+                         <span style="font-size: 0.9rem; color: #777;">질문/답변</span>
+                    </div>
+                     <h3 class="post-title">초보자 라켓 추천 부탁드려요!</h3>
+                    <p class="post-excerpt">배드민턴 시작한 지 한 달 된 초보입니다. 10만원 이하로 가성비 좋은 입문용 라켓 추천해주세요.</p>
+                    <div class="post-stats">
+                        <span><i class="fas fa-eye"></i> 123</span>
+                        <span><i class="fas fa-comment"></i> 25</span>
+                        <span><i class="fas fa-question-circle"></i></span>
+                    </div>
+                </div>
+                 <!-- Community Card 3 -->
+                <div class="community-card">
+                    <div class="community-header">
+                        <div class="user-info">
+                            <img src="https://via.placeholder.com/40x40/16a085/ffffff?text=U3" alt="User Avatar" class="user-avatar">
+                            <div>
+                                <h4>용품리뷰어</h4>
+                                <span>1일 전</span>
+                            </div>
+                        </div>
+                         <span style="font-size: 0.9rem; color: #777;">용품 후기</span>
+                    </div>
+                     <h3 class="post-title">브랜드 A 신상 라켓 X1 사용 후기</h3>
+                    <p class="post-excerpt">이번에 새로 나온 X1 라켓 일주일 사용해봤습니다. 확실히 가볍고 반발력이 좋네요. 자세한 후기는...</p>
+                    <div class="post-stats">
+                        <span><i class="fas fa-eye"></i> 340</span>
+                        <span><i class="fas fa-comment"></i> 45</span>
+                        <span><i class="fas fa-star"></i> 4.7</span>
+                    </div>
+                </div>
+            </div>
+             <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-large">커뮤니티 더보기</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 유튜브 채널 섹션 -->
+    <section class="youtube-section">
+        <div class="container">
+            <h2 class="section-title">추천 배드민턴 유튜브 채널</h2>
+            <div class="filter-controls">
+                <button class="filter-btn active">인기순</button>
+                <button class="filter-btn">업로드순</button>
+                <button class="filter-btn">구독자순</button>
+                <button class="filter-btn">국내</button>
+                <button class="filter-btn">해외</button>
+            </div>
+            <div class="channel-grid">
+                <!-- 채널 카드 1 -->
+                <div class="channel-card">
+                    <div class="channel-banner">
+                        <img src="https://via.placeholder.com/280x100/8e44ad/ffffff?text=Channel+Banner+1" alt="채널 배너">
+                    </div>
+                    <div class="channel-info">
+                        <img src="https://via.placeholder.com/60x60/ecf0f1/8e44ad?text=BM" alt="채널 아바타" class="channel-avatar">
+                        <div>
+                            <h3>배드민턴 마스터</h3>
+                            <p>구독자 125K</p>
+                        </div>
+                    </div>
+                    <div class="channel-stats">
+                        <span>총 영상 328개</span>
+                        <span>평균 조회수 45K</span>
+                    </div>
+                    <div class="channel-videos">
+                        <h4>최신 업로드</h4>
+                        <div class="channel-video">
+                            <div class="video-thumbnail">
+                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid1" alt="비디오 썸네일">
+                            </div>
+                            <div class="video-info">
+                                <h4>초보자를 위한 스텝 워크 완벽 가이드</h4>
+                                <p>3일 전 • 조회수 32K</p>
+                            </div>
+                        </div>
+                        <div class="channel-video">
+                            <div class="video-thumbnail">
+                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid2" alt="비디오 썸네일">
+                            </div>
+                            <div class="video-info">
+                                <h4>강력한 스매시를 위한 3가지 팁</h4>
+                                <p>1주 전 • 조회수 58K</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 채널 카드 2 (Completed) -->
+                <div class="channel-card">
+                    <div class="channel-banner">
+                        <img src="https://via.placeholder.com/280x100/2980b9/ffffff?text=Channel+Banner+2" alt="채널 배너">
+                    </div>
+                    <div class="channel-info">
+                        <img src="https://via.placeholder.com/60x60/ecf0f1/2980b9?text=SL" alt="채널 아바타" class="channel-avatar">
+                        <div>
+                            <h3>셔틀콕 라이프</h3>
+                            <p>구독자 88K</p>
+                        </div>
+                    </div>
+                    <div class="channel-stats">
+                        <span>총 영상 152개</span>
+                        <span>평균 조회수 30K</span>
+                    </div>
+                    <div class="channel-videos">
+                        <h4>인기 영상</h4>
+                        <div class="channel-video">
+                            <div class="video-thumbnail">
+                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid3" alt="비디오 썸네일">
+                            </div>
+                            <div class="video-info">
+                                <h4>배드민턴 복식 전략 A to Z</h4>
+                                <p>1개월 전 • 조회수 110K</p>
+                            </div>
+                        </div>
+                        <div class="channel-video">
+                            <div class="video-thumbnail">
+                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid4" alt="비디오 썸네일">
+                            </div>
+                            <div class="video-info">
+                                <h4>헤어핀 기술, 이것만 알면 된다!</h4>
+                                <p>2주 전 • 조회수 75K</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- 채널 카드 3 (추가) -->
+                <div class="channel-card">
+                    <div class="channel-banner">
+                        <img src="https://via.placeholder.com/280x100/c0392b/ffffff?text=Channel+Banner+3" alt="채널 배너">
+                    </div>
+                    <div class="channel-info">
+                        <img src="https://via.placeholder.com/60x60/ecf0f1/c0392b?text=GT" alt="채널 아바타" class="channel-avatar">
+                        <div>
+                            <h3>글로벌 배드민턴 TV</h3>
+                            <p>구독자 350K</p>
+                        </div>
+                    </div>
+                    <div class="channel-stats">
+                        <span>총 영상 800+개</span>
+                        <span>해외 채널</span>
+                    </div>
+                    <div class="channel-videos">
+                        <h4>최신 하이라이트</h4>
+                        <div class="channel-video">
+                            <div class="video-thumbnail">
+                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid5" alt="비디오 썸네일">
+                            </div>
+                            <div class="video-info">
+                                <h4>All England 2025 Finals Highlights</h4>
+                                <p>1일 전 • 조회수 250K</p>
+                            </div>
+                        </div>
+                        <div class="channel-video">
+                            <div class="video-thumbnail">
+                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid6" alt="비디오 썸네일">
+                            </div>
+                            <div class="video-info">
+                                <h4>Top 10 Rallies of the Month</h4>
+                                <p>5일 전 • 조회수 180K</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>배드민턴 허브</h3>
+                    <p>배드민턴의 모든 것을 연결합니다. 최신 정보, 커뮤니티, 쇼핑까지 한 곳에서 즐기세요.</p>
+                     <div class="social-links">
+                        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>바로가기</h3>
+                    <ul class="footer-links">
+                        <li><a href="#live">라이브/VOD</a></li>
+                        <li><a href="#tournaments">대회 정보</a></li>
+                        <li><a href="#lessons">레슨 찾기</a></li>
+                        <li><a href="#market">마켓플레이스</a></li>
+                        <li><a href="#community">커뮤니티</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>고객 지원</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">자주 묻는 질문</a></li>
+                        <li><a href="#">문의하기</a></li>
+                        <li><a href="#">이용 약관</a></li>
+                        <li><a href="#">개인정보 처리방침</a></li>
+                        <li><a href="#">공지사항</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-column">
+                    <h3>뉴스레터 구독</h3>
+                    <p>최신 배드민턴 소식과 업데이트를 받아보세요.</p>
+                    <form style="margin-top: 1rem; display: flex;">
+                        <input type="email" placeholder="이메일 주소 입력" style="padding: 0.5rem; border: none; border-radius: 3px 0 0 3px; flex-grow: 1;">
+                        <button type="submit" class="btn" style="margin-left: 0; border-radius: 0 3px 3px 0; padding: 0.5rem 0.8rem;">구독</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 배드민턴 허브. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const channelGrid = document.querySelector('.youtube-section .channel-grid');
+            const livePlayer = document.querySelector('.live-player'); // Get the player container
+            const fullscreenBtn = document.querySelector('.fullscreen-btn'); // Get the fullscreen button
+            const liveIframe = document.getElementById('live-iframe'); // Get the iframe
+
+            // --- Fetch and display videos.json ---
+            fetch('videos.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(videos => {
+                    if (!channelGrid) {
+                        console.error('Error: Could not find channel grid element (.youtube-section .channel-grid)');
+                        return;
+                    }
+                    console.log('Fetched videos:', videos); // Log fetched data
+                    channelGrid.innerHTML = ''; // Clear existing content
+
+                    if (!Array.isArray(videos)) {
+                        console.error('Error: Fetched data is not an array.');
+                        channelGrid.innerHTML = '<p style="color: red; text-align: center;">영상 데이터를 불러오는 데 문제가 발생했습니다.</p>';
+                        return;
+                    }
+                    if (videos.length === 0) {
+                         console.log('No videos found in videos.json.');
+                         channelGrid.innerHTML = '<p style="text-align: center;">표시할 추천 영상이 없습니다.</p>';
+                         return;
+                    }
+
+                    // Create video cards based on the target layout (simplified)
+                    videos.forEach((video, index) => {
+                        try { // Add try block for individual card creation
+                            console.log(`Processing video ${index}:`, video);
+                            if (!video || !video.id) {
+                                console.warn(`Skipping invalid video data at index ${index}:`, video);
+                                return; // Use 'continue' equivalent in forEach by returning
+                            }
+
+                            const card = document.createElement('div');
+                            card.classList.add('video-card'); // Use a new class for styling
+
+                        const link = document.createElement('a');
+                        link.href = `https://www.youtube.com/watch?v=${video.id}`;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+
+                        // Thumbnail
+                        const thumbnailDiv = document.createElement('div');
+                        thumbnailDiv.classList.add('video-thumbnail-container');
+                        const thumbnailImg = document.createElement('img');
+                        // Use hqdefault for potentially better quality if available
+                        thumbnailImg.src = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+                        thumbnailImg.alt = video.title || 'YouTube Video Thumbnail';
+                        // Add fallback to mqdefault if hqdefault fails to load
+                        thumbnailImg.onerror = () => {
+                            console.warn(`hqdefault thumbnail failed for ${video.id}, trying mqdefault.`);
+                            thumbnailImg.src = `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
+                            thumbnailImg.onerror = null; // Prevent infinite loop if mqdefault also fails
+                         };
+                        thumbnailDiv.appendChild(thumbnailImg);
+                        link.appendChild(thumbnailDiv);
+
+                        // Details below thumbnail
+                        const detailsDiv = document.createElement('div');
+                        detailsDiv.classList.add('video-details');
+
+                        // Title
+                        const titleDiv = document.createElement('div');
+                        titleDiv.classList.add('video-title');
+                        titleDiv.textContent = video.title || `영상 ${video.id}`; // Use title from JSON or default
+                        detailsDiv.appendChild(titleDiv);
+
+                        // --- Placeholder for future data (Channel, Views, Time) ---
+                        // const channelDiv = document.createElement('div');
+                        // channelDiv.classList.add('video-channel-info');
+                        // channelDiv.textContent = 'Channel Name Here'; // Replace with data later
+                        // detailsDiv.appendChild(channelDiv);
+                        //
+                        // const metaDiv = document.createElement('div');
+                        // metaDiv.classList.add('video-meta');
+                        // metaDiv.textContent = 'Views • Time'; // Replace with data later
+                        // detailsDiv.appendChild(metaDiv);
+                        // ---------------------------------------------------------
+
+                            link.appendChild(detailsDiv);
+                            card.appendChild(link);
+                            channelGrid.appendChild(card);
+
+                        } catch (cardError) {
+                            console.error(`Error creating card for video at index ${index}:`, video, cardError);
+                            // Optionally add a placeholder error card to the grid
+                            const errorCard = document.createElement('div');
+                            errorCard.textContent = `영상 ${index + 1} 로딩 오류`;
+                            errorCard.style.color = 'red';
+                            errorCard.style.padding = '1rem';
+                            errorCard.style.border = '1px solid red';
+                            channelGrid.appendChild(errorCard);
+                        }
+                    });
+                })
+                .catch(error => {
+                    // This catch handles errors during fetch or initial JSON parsing
+                    console.error('Error fetching or parsing videos.json:', error);
+                    if (channelGrid) { // Ensure channelGrid exists before modifying
+                       channelGrid.innerHTML = '<p style="color: red; text-align: center;">영상 목록 파일을 불러오는 중 오류가 발생했습니다.</p>';
+                    }
+                });
+
+            // --- Fullscreen Button Logic ---
+            if (fullscreenBtn && livePlayer && liveIframe) {
+                fullscreenBtn.addEventListener('click', () => {
+                    // Check if fullscreen is supported and not already active
+                    if (document.fullscreenEnabled && !document.fullscreenElement) {
+                        // Request fullscreen on the iframe's parent container for better control
+                        livePlayer.requestFullscreen().catch(err => {
+                            alert(`전체 화면 모드를 시작할 수 없습니다: ${err.message}`);
+                        });
+                    } else if (document.fullscreenElement) {
+                        // Exit fullscreen
+                        document.exitFullscreen();
+                    } else {
+                        alert('브라우저가 전체 화면 모드를 지원하지 않거나 허용되지 않았습니다.');
+                    }
+                });
+
+                // Optional: Change button icon when entering/exiting fullscreen
+                document.addEventListener('fullscreenchange', () => {
+                    if (document.fullscreenElement === livePlayer) {
+                        fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>'; // Change to compress icon
+                        fullscreenBtn.title = '전체 화면 종료';
+                    } else {
+                        fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>'; // Change back to expand icon
+                        fullscreenBtn.title = '전체 화면';
+                    }
+                });
+            } else {
+                 console.error('Fullscreen button or live player/iframe element not found.');
+            }
+        });
+    </script>
+
+</body>
+</html>
