@@ -257,9 +257,10 @@
         <!-- Save Button -->
         <button id="save-all-button">모든 변경사항 저장</button>
          <p style="font-size: 0.9em; color: #555; margin-top: 10px;">
-            '저장' 버튼을 누르면 입력된 모든 정보(영상, 어플, 일정)가 브라우저의<br>
-            `localStorage`에 저장되어 메인 페이지에 즉시 반영됩니다.<br>
-            (별도의 파일 다운로드 및 업로드 과정이 필요 없습니다.)
+            '저장' 버튼을 누르면 입력된 모든 정보(영상, 어플, 일정)에 대한<br>
+            `videos.json`, `apps.json`, `schedule.json` 파일 다운로드가 시작됩니다.<br>
+            다운로드된 파일들을 `badminton_hub` 폴더에 덮어쓰기 한 후,<br>
+            Git에 변경사항을 커밋하고 푸시해야 메인 페이지에 반영됩니다.
         </p>
 
         <!-- Removed old video list and download button -->

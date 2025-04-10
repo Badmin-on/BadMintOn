@@ -1467,10 +1467,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Constants for localStorage keys (must match admin.js) ---
-            const LS_VIDEOS_KEY = 'badmintonHubVideos';
-            const LS_APPS_KEY = 'badmintonHubApps';
-            const LS_SCHEDULE_KEY = 'badmintonHubSchedule';
+            // --- Constants for JSON filenames (must match admin.js) ---
+            const VIDEOS_FILENAME = 'videos.json';
+            const APPS_FILENAME = 'apps.json';
+            const SCHEDULE_FILENAME = 'schedule.json';
 
             // --- DOM Elements ---
             const videoChannelGrid = document.querySelector('.youtube-section .channel-grid');
@@ -1495,11 +1495,17 @@
                     return;
                 }
                 videoChannelGrid.innerHTML = ''; // Clear existing
-                try {
-                    const videos = JSON.parse(localStorage.getItem(LS_VIDEOS_KEY) || '[]');
-                    console.log('Loaded videos from localStorage:', videos);
-
-                    if (!Array.isArray(videos)) throw new Error("Video data is not an array.");
+                fetch(`${VIDEOS_FILENAME}?t=${Date.now()}`) // Fetch with cache busting
+                    .then(response => {
+                        if (!response.ok) {
+                            if (response.status === 404) return []; // Return empty array if not found
+                            throw new Error(`HTTP error loading ${VIDEOS_FILENAME}! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(videos => {
+                        console.log('Loaded videos from file:', videos);
+                        if (!Array.isArray(videos)) throw new Error("Video data is not an array.");
 
                     if (videos.length === 0) {
                         videoChannelGrid.innerHTML = '<p style="text-align: center;">표시할 추천 영상이 없습니다.</p>';
@@ -1540,23 +1546,38 @@
                         card.appendChild(link);
                         videoChannelGrid.appendChild(card);
                     });
-                } catch (error) {
-                    console.error('Error loading or displaying videos:', error);
-                    videoChannelGrid.innerHTML = '<p style="color: red; text-align: center;">추천 영상을 불러오는 중 오류가 발생했습니다.</p>';
-                }
+                 }) // End of .then(videos => ...)
+                 .catch(error => { // Add the correct .catch() here
+                     console.error('Error loading or displaying videos:', error);
+                     if (videoChannelGrid) { // Check if grid exists before modifying
+                         videoChannelGrid.innerHTML = '<p style="color: red; text-align: center;">추천 영상을 불러오는 중 오류가 발생했습니다.</p>';
+                     }
+                 }); // End of fetch chain for videos
             }
 
-            function loadApps() {
+            async function loadApps() { // Make async to use await
                 if (!appGrid) {
                     console.error('App grid not found.');
                     return;
                 }
                 appGrid.innerHTML = ''; // Clear existing
                 try {
-                    allAppData = JSON.parse(localStorage.getItem(LS_APPS_KEY) || '[]'); // Store globally
-                    console.log('Loaded apps from localStorage:', allAppData);
-
-                    if (!Array.isArray(allAppData)) throw new Error("App data is not an array.");
+                    const response = await fetch(`${APPS_FILENAME}?t=${Date.now()}`); // Fetch with cache busting
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                             console.log(`${APPS_FILENAME} not found.`);
+                             allAppData = []; // Ensure empty array
+                        } else {
+                            throw new Error(`HTTP error loading ${APPS_FILENAME}! status: ${response.status}`);
+                        }
+                    } else {
+                        allAppData = await response.json(); // Store globally
+                        if (!Array.isArray(allAppData)) {
+                             console.warn(`${APPS_FILENAME} content is not an array. Treating as empty.`);
+                             allAppData = [];
+                        }
+                    }
+                    console.log('Loaded apps from file:', allAppData);
 
                     if (allAppData.length === 0) {
                         appGrid.innerHTML = '<p style="text-align: center;">표시할 어플 정보가 없습니다.</p>';
@@ -1601,18 +1622,33 @@
                 } catch (error) {
                     console.error('Error loading or displaying apps:', error);
                     appGrid.innerHTML = '<p style="color: red; text-align: center;">어플 정보를 불러오는 중 오류가 발생했습니다.</p>';
+                    allAppData = []; // Reset on error
                 }
             }
 
-            function loadSchedule() {
+            async function loadSchedule() { // Make async to use await
                  try {
-                    allScheduleData = JSON.parse(localStorage.getItem(LS_SCHEDULE_KEY) || '[]');
-                    console.log('Loaded schedule from localStorage:', allScheduleData);
-                    if (!Array.isArray(allScheduleData)) throw new Error("Schedule data is not an array.");
+                    const response = await fetch(`${SCHEDULE_FILENAME}?t=${Date.now()}`); // Fetch with cache busting
+                     if (!response.ok) {
+                         if (response.status === 404) {
+                             console.log(`${SCHEDULE_FILENAME} not found.`);
+                             allScheduleData = []; // Ensure empty array
+                         } else {
+                             throw new Error(`HTTP error loading ${SCHEDULE_FILENAME}! status: ${response.status}`);
+                         }
+                     } else {
+                         allScheduleData = await response.json();
+                         if (!Array.isArray(allScheduleData)) {
+                             console.warn(`${SCHEDULE_FILENAME} content is not an array. Treating as empty.`);
+                             allScheduleData = [];
+                         }
+                     }
+                    console.log('Loaded schedule from file:', allScheduleData);
                     // Initial calendar render after loading schedule
                     renderCalendar(currentDisplayedDate);
                  } catch (error) {
                      console.error('Error loading schedule:', error);
+                     allScheduleData = []; // Reset on error
                      // Optionally display an error in the calendar area
                      if(calendarDaysContainer) calendarDaysContainer.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">일정 로딩 오류</p>';
                  }
@@ -1743,11 +1779,14 @@
             }
 
 
-            // --- Initial Load Sequence ---
-            loadApps(); // Load apps first so calendar can use app data
-            loadSchedule(); // Load schedule and render calendar
-            loadVideos(); // Load videos independently
+            // --- Initial Load Sequence (using async/await for proper order) ---
+            async function initializePage() {
+                await loadApps(); // Load apps first so calendar can use app data
+                await loadSchedule(); // Load schedule and render calendar
+                loadVideos(); // Load videos (can run concurrently if desired, or await too)
+            }
 
+            initializePage(); // Run the initialization sequence
 
             // --- Fullscreen Button Logic (Keep this) ---
             if (fullscreenBtn && livePlayer && liveIframe) {

@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Constants for localStorage keys ---
-    const LS_VIDEOS_KEY = 'badmintonHubVideos';
-    const LS_APPS_KEY = 'badmintonHubApps';
-    const LS_SCHEDULE_KEY = 'badmintonHubSchedule';
+    // --- Constants ---
     const MAX_ITEMS = 5; // Max videos and apps
+    const VIDEOS_FILENAME = 'videos.json';
+    const APPS_FILENAME = 'apps.json';
+    const SCHEDULE_FILENAME = 'schedule.json';
 
     // --- DOM Elements ---
     const authContainer = document.getElementById('auth-container');
@@ -130,48 +130,113 @@ document.addEventListener('DOMContentLoaded', () => {
         scheduleListContainer.appendChild(scheduleElement);
     }
 
-    // --- Load Data from localStorage ---
-    function loadData() {
-        console.log('Loading data from localStorage...');
-        // Load Videos
-        const storedVideos = JSON.parse(localStorage.getItem(LS_VIDEOS_KEY) || '[]');
-        videoUrlInputs.forEach((input, index) => {
-            input.value = storedVideos[index]?.url || '';
-        });
-        console.log('Loaded videos:', storedVideos);
-
-        // Load Apps
-        const storedApps = JSON.parse(localStorage.getItem(LS_APPS_KEY) || '[]');
-        appNameInputs.forEach((input, index) => {
-            input.value = storedApps[index]?.name || '';
-        });
-        appLinkInputs.forEach((input, index) => {
-            input.value = storedApps[index]?.link || '';
-        });
-        appIconUrlInputs.forEach((input, index) => { // Changed variable name
-            input.value = storedApps[index]?.iconUrl || ''; // Changed property name
-        });
-        console.log('Loaded apps:', storedApps);
-
-        // Load Schedule
-        const storedSchedule = JSON.parse(localStorage.getItem(LS_SCHEDULE_KEY) || '[]');
-        scheduleListContainer.innerHTML = ''; // Clear existing schedule items
-        storedSchedule.forEach(item => addScheduleItem(item, storedApps)); // Pass loaded apps for dropdown
-        console.log('Loaded schedule:', storedSchedule);
+    // --- Helper Function to Trigger Download ---
+    function triggerDownload(filename, data) {
+        const dataStr = JSON.stringify(data, null, 2); // Pretty print JSON
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const downloadUrl = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(downloadUrl);
+        console.log(`Triggered download for ${filename}`);
     }
 
-    // --- Save Data to localStorage ---
+    // --- Load Data from JSON Files ---
+    async function loadData() {
+        console.log('Loading data from JSON files...');
+        let loadedApps = []; // Need apps data for schedule dropdown
+
+        // --- Load Apps ---
+        try {
+            const response = await fetch(`${APPS_FILENAME}?t=${Date.now()}`); // Cache bust
+            if (!response.ok) {
+                if (response.status === 404) console.log(`${APPS_FILENAME} not found. Inputs will be empty.`);
+                else throw new Error(`HTTP error loading ${APPS_FILENAME}! status: ${response.status}`);
+                loadedApps = []; // Ensure it's an empty array on error/404
+            } else {
+                loadedApps = await response.json();
+                if (!Array.isArray(loadedApps)) {
+                    console.warn(`${APPS_FILENAME} content is not an array. Treating as empty.`);
+                    loadedApps = [];
+                }
+            }
+            // Populate App inputs
+            appNameInputs.forEach((input, index) => input.value = loadedApps[index]?.name || '');
+            appLinkInputs.forEach((input, index) => input.value = loadedApps[index]?.link || '');
+            appIconUrlInputs.forEach((input, index) => input.value = loadedApps[index]?.iconUrl || '');
+            console.log('Loaded apps:', loadedApps);
+        } catch (error) {
+            console.error(`Error loading ${APPS_FILENAME}:`, error);
+            // Clear inputs on error
+            appNameInputs.forEach(input => input.value = '');
+            appLinkInputs.forEach(input => input.value = '');
+            appIconUrlInputs.forEach(input => input.value = '');
+            loadedApps = []; // Reset on error
+        }
+
+        // --- Load Videos ---
+        try {
+            const response = await fetch(`${VIDEOS_FILENAME}?t=${Date.now()}`); // Cache bust
+            let loadedVideos = [];
+            if (!response.ok) {
+                 if (response.status === 404) console.log(`${VIDEOS_FILENAME} not found. Inputs will be empty.`);
+                 else throw new Error(`HTTP error loading ${VIDEOS_FILENAME}! status: ${response.status}`);
+            } else {
+                loadedVideos = await response.json();
+                 if (!Array.isArray(loadedVideos)) {
+                    console.warn(`${VIDEOS_FILENAME} content is not an array. Treating as empty.`);
+                    loadedVideos = [];
+                }
+            }
+            // Populate Video inputs
+            videoUrlInputs.forEach((input, index) => input.value = loadedVideos[index]?.url || '');
+            console.log('Loaded videos:', loadedVideos);
+        } catch (error) {
+            console.error(`Error loading ${VIDEOS_FILENAME}:`, error);
+            videoUrlInputs.forEach(input => input.value = ''); // Clear inputs on error
+        }
+
+        // --- Load Schedule ---
+        try {
+            const response = await fetch(`${SCHEDULE_FILENAME}?t=${Date.now()}`); // Cache bust
+            let loadedSchedule = [];
+             if (!response.ok) {
+                 if (response.status === 404) console.log(`${SCHEDULE_FILENAME} not found. Inputs will be empty.`);
+                 else throw new Error(`HTTP error loading ${SCHEDULE_FILENAME}! status: ${response.status}`);
+            } else {
+                loadedSchedule = await response.json();
+                 if (!Array.isArray(loadedSchedule)) {
+                    console.warn(`${SCHEDULE_FILENAME} content is not an array. Treating as empty.`);
+                    loadedSchedule = [];
+                }
+            }
+            // Populate Schedule inputs (using the apps loaded earlier)
+            scheduleListContainer.innerHTML = ''; // Clear existing schedule items
+            loadedSchedule.forEach(item => addScheduleItem(item, loadedApps));
+            console.log('Loaded schedule:', loadedSchedule);
+        } catch (error) {
+            console.error(`Error loading ${SCHEDULE_FILENAME}:`, error);
+            scheduleListContainer.innerHTML = ''; // Clear schedule on error
+        }
+    }
+
+    // --- Save Data to JSON Files (Trigger Download) ---
     function saveData() {
-        console.log('Saving data to localStorage...');
-        // Save Videos
-        const videosToSave = [];
+        console.log('Gathering data to generate JSON files...');
+
+        // --- Prepare Video Data ---
+        const videoData = [];
         const processedVideoIds = new Set();
         videoUrlInputs.forEach(input => {
             const url = input.value.trim();
             if (url) {
                 const videoId = extractVideoId(url);
                 if (videoId && !processedVideoIds.has(videoId)) {
-                    videosToSave.push({
+                    videoData.push({
                         id: videoId,
                         title: `영상 ${videoId}`, // Default title
                         thumbnail: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
@@ -179,48 +244,61 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     processedVideoIds.add(videoId);
                 } else if (videoId) {
-                    console.warn(`Duplicate video ID skipped during save: ${videoId}`);
+                    console.warn(`Duplicate video ID skipped for ${VIDEOS_FILENAME}: ${videoId}`);
                 } else {
-                    console.warn(`Invalid video URL skipped during save: ${url}`);
+                    console.warn(`Invalid video URL skipped for ${VIDEOS_FILENAME}: ${url}`);
                 }
             }
         });
-        localStorage.setItem(LS_VIDEOS_KEY, JSON.stringify(videosToSave));
-        console.log('Saved videos:', videosToSave);
+        console.log('Video data prepared:', videoData);
 
-        // Save Apps
-        const appsToSave = [];
+        // --- Prepare App Data ---
+        const appData = [];
         for (let i = 0; i < MAX_ITEMS; i++) {
             const name = appNameInputs[i].value.trim();
             const link = appLinkInputs[i].value.trim();
-            const iconUrl = appIconUrlInputs[i].value.trim(); // Changed variable and input source
+            const iconUrl = appIconUrlInputs[i].value.trim();
             // Only save if at least name or iconUrl is provided
             if (name || iconUrl) {
-                appsToSave.push({ name, link, iconUrl }); // Changed property name
-            } else {
-                 appsToSave.push({}); // Keep placeholder for indexing if needed, or filter later
+                appData.push({ name, link, iconUrl });
             }
+            // No need for placeholders, just skip empty entries
         }
-        // Filter out completely empty entries before saving
-        const filteredApps = appsToSave.filter(app => app.name || app.link || app.iconUrl); // Changed property name
-        localStorage.setItem(LS_APPS_KEY, JSON.stringify(filteredApps));
-        console.log('Saved apps:', filteredApps);
+        console.log('App data prepared:', appData);
 
-        // Save Schedule
-        const scheduleToSave = [];
+        // --- Prepare Schedule Data ---
+        const scheduleData = [];
         const scheduleItems = scheduleListContainer.querySelectorAll('.schedule-item');
         scheduleItems.forEach(item => {
             const date = item.querySelector('.schedule-date').value;
             const name = item.querySelector('.schedule-name').value.trim();
             const appName = item.querySelector('.schedule-app').value;
             if (date && name) { // Only save if date and name are present
-                scheduleToSave.push({ date, name, appName });
+                scheduleData.push({ date, name, appName });
             }
         });
-        localStorage.setItem(LS_SCHEDULE_KEY, JSON.stringify(scheduleToSave));
-        console.log('Saved schedule:', scheduleToSave);
+        console.log('Schedule data prepared:', scheduleData);
 
-        alert('모든 변경사항이 브라우저에 저장되었습니다.');
+        // --- Trigger Downloads ---
+        if (videoData.length > 0) {
+            triggerDownload(VIDEOS_FILENAME, videoData);
+        } else {
+            console.log(`No valid video data to save to ${VIDEOS_FILENAME}.`);
+        }
+
+        if (appData.length > 0) {
+             triggerDownload(APPS_FILENAME, appData);
+        } else {
+             console.log(`No valid app data to save to ${APPS_FILENAME}.`);
+        }
+
+         if (scheduleData.length > 0) {
+             triggerDownload(SCHEDULE_FILENAME, scheduleData);
+        } else {
+             console.log(`No valid schedule data to save to ${SCHEDULE_FILENAME}.`);
+        }
+
+        alert('JSON 파일 다운로드가 시작됩니다.\n다운로드된 파일을 badminton_hub 폴더에 덮어쓰고 Git에 커밋/푸시해주세요.');
     }
 
     // --- Event Listeners ---
