@@ -349,6 +349,166 @@
             color: #555;
         }
 
+        /* App Links Section Styles */
+        .app-links-section {
+            background-color: #f9f9f9; /* Light background */
+            padding: 3rem 0;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust minmax for desired size */
+            gap: 2rem;
+            justify-content: center; /* Center items if they don't fill the row */
+        }
+        .app-link-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .app-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.12);
+        }
+        .app-icon-container {
+            width: 80px; /* Adjust size */
+            height: 80px; /* Adjust size */
+            margin-bottom: 1rem;
+            overflow: hidden; /* Ensure image fits */
+            border-radius: 15px; /* Rounded corners for icon */
+            background-color: #eee; /* Placeholder bg */
+        }
+        .app-icon-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .app-link-card h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* Calendar Section Styles */
+        .calendar-section {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        .calendar-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .calendar-header button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+            padding: 0.5rem;
+        }
+        .calendar-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px; /* Small gap between cells */
+        }
+        .calendar-weekdays {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .calendar-weekday {
+            text-align: center;
+            font-weight: bold;
+            color: #777;
+            font-size: 0.9em;
+        }
+        .calendar-cell {
+            border: 1px solid #eee;
+            min-height: 120px; /* Adjust height as needed */
+            padding: 8px;
+            position: relative;
+            background-color: #fff;
+            transition: background-color 0.2s;
+            display: flex; /* Use flexbox for content alignment */
+            flex-direction: column; /* Stack day number and events */
+        }
+        .calendar-cell:hover {
+            background-color: #f9f9f9;
+        }
+        .calendar-cell.other-month {
+            background-color: #f7f7f7;
+            color: #ccc;
+        }
+        .calendar-cell.today {
+            background-color: #e8f4f8; /* Light blue highlight for today */
+            border: 1px solid var(--primary);
+        }
+        .day-number {
+            font-weight: 500;
+            font-size: 0.9em;
+            margin-bottom: 5px; /* Space between number and events */
+            align-self: flex-start; /* Align day number to the top-left */
+        }
+        .calendar-cell.today .day-number {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .calendar-events {
+            flex-grow: 1; /* Allow events container to fill space */
+            overflow-y: auto; /* Add scroll if events overflow */
+            font-size: 0.8em;
+            max-height: 80px; /* Limit height to prevent excessive stretching */
+        }
+        .calendar-event {
+            background-color: var(--secondary);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 3px;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex; /* Use flex for icon and text */
+            align-items: center;
+            gap: 4px;
+            cursor: pointer; /* Indicate clickable */
+            transition: background-color 0.2s;
+        }
+        .calendar-event:hover {
+            background-color: #27ae60; /* Darker green on hover */
+        }
+        .event-app-icon {
+            width: 16px; /* Small icon size */
+            height: 16px;
+            border-radius: 3px; /* Slightly rounded */
+            vertical-align: middle; /* Align icon nicely */
+            flex-shrink: 0; /* Prevent icon shrinking */
+        }
+        .event-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex-grow: 1; /* Allow text to take remaining space */
+        }
+
 
         /* 라이브 스트리밍 섹션 */
         .live-section {
@@ -505,11 +665,14 @@
             align-items: center;
             transition: background-color 0.2s;
         }
-        .schedule-item:last-child {
-            border-bottom: none;
-        }
-        .schedule-item:hover {
-            background-color: #f9f9f9;
+
+        /* ====================================== */
+        /* == / 배드민턴 대회 일정 달력 섹션 끝 == */
+        /* ====================================== */
+
+        /* 동호인 대회 플랫폼 섹션 */
+        .tournament-platforms-section {
+            background-color: white; /* Changed background */
         }
 
         .schedule-time {
@@ -972,7 +1135,22 @@
         </div>
     </section>
 
-    <!-- 라이브 스트리밍 섹션 -->
+    <!-- ====================================== -->
+    <!-- == 어플 바로가기 섹션 (추가) == -->
+    <!-- ====================================== -->
+    <section class="app-links-section" id="app-links">
+        <div class="container">
+            <h2 class="section-title">어플 바로가기</h2>
+            <div class="app-grid">
+                <!-- App links will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+    <!-- ====================================== -->
+    <!-- == / 어플 바로가기 섹션 끝 == -->
+    <!-- ====================================== -->
+
+    <!-- 라이브 스트리밍 섹션 (다시 추가) -->
     <section class="live-section" id="live">
         <div class="container">
             <h2 class="section-title">라이브 중계 & 경기 일정</h2>
@@ -989,14 +1167,16 @@
                 <div class="live-schedule">
                     <div class="schedule-header">
                         <h3>경기 일정</h3>
-                        <a href="#" class="btn">전체 일정</a>
+                        <a href="#tournament-calendar" class="btn">전체 일정 보기</a> <!-- Link to calendar section -->
                     </div>
                     <div class="schedule-tabs">
                         <div class="schedule-tab active">오늘</div>
                         <div class="schedule-tab">내일</div>
                         <div class="schedule-tab">이번 주</div>
                     </div>
-                    <div class="schedule-list">
+                    <div class="schedule-list" id="live-schedule-list">
+                        <!-- Live schedule items might be populated dynamically or remain static -->
+                        <!-- Example Static Items (can be replaced by dynamic loading if needed) -->
                         <div class="schedule-item">
                             <div class="schedule-time">09:30</div>
                             <div class="schedule-match">
@@ -1021,158 +1201,60 @@
                             </div>
                             <div class="schedule-status status-upcoming">예정</div>
                         </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">15:00</div>
-                            <div class="schedule-match">
-                                <h4>여자 복식 결승</h4>
-                                <p>정/한 조 vs 김/윤 조</p>
-                            </div>
-                            <div class="schedule-status status-upcoming">예정</div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">16:30</div>
-                            <div class="schedule-match">
-                                <h4>혼합 복식 결승</h4>
-                                <p>서/김 조 vs 최/정 조</p>
-                            </div>
-                            <div class="schedule-status status-upcoming">예정</div>
-                        </div>
-                         <div class="schedule-item">
-                            <div class="schedule-time">18:00</div>
-                            <div class="schedule-match">
-                                <h4>시상식</h4>
-                                <p>모든 경기 종료 후</p>
-                            </div>
-                            <div class="schedule-status status-upcoming">예정</div>
-                        </div>
+                        <!-- Add more static items or implement dynamic loading -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 인기 콘텐츠 섹션 (대회 하이라이트 등) -->
-    <section id="tournaments">
+     <!-- ====================================== -->
+    <!-- == 배드민턴 대회 일정 달력 섹션 (위치 이동됨) == -->
+    <!-- ====================================== -->
+    <section class="calendar-section" id="tournament-calendar">
         <div class="container">
-            <h2 class="section-title">인기 콘텐츠 & 대회 하이라이트</h2>
+            <h2 class="section-title">대회 일정</h2>
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prev-month-btn" title="이전 달"><i class="fas fa-chevron-left"></i></button>
+                    <h3 id="current-month-year"></h3>
+                    <button id="next-month-btn" title="다음 달"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid calendar-weekdays">
+                    <div class="calendar-weekday">일</div>
+                    <div class="calendar-weekday">월</div>
+                    <div class="calendar-weekday">화</div>
+                    <div class="calendar-weekday">수</div>
+                    <div class="calendar-weekday">목</div>
+                    <div class="calendar-weekday">금</div>
+                    <div class="calendar-weekday">토</div>
+                </div>
+                <div class="calendar-grid" id="calendar-days">
+                    <!-- Calendar days will be dynamically generated here -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ====================================== -->
+    <!-- == / 배드민턴 대회 일정 달력 섹션 끝 == -->
+    <!-- ====================================== -->
+
+    <!-- 동호인 대회 플랫폼 섹션 (삭제됨) -->
+    <!-- <section class="tournament-platforms-section"> ... </section> -->
+
+    <!-- 유튜브 채널 섹션 -->
+    <section class="youtube-section">
+        <div class="container">
+            <h2 class="section-title">추천 배드민턴 유튜브 채널</h2>
             <div class="filter-controls">
-                <button class="filter-btn active">전체</button>
-                <button class="filter-btn">하이라이트</button>
-                <button class="filter-btn">인터뷰</button>
-                <button class="filter-btn">기술 분석</button>
-                <button class="filter-btn">경기 풀영상</button>
+                <button class="filter-btn active">인기순</button>
+                <button class="filter-btn">업로드순</button>
+                <button class="filter-btn">구독자순</button>
+                <button class="filter-btn">국내</button>
+                <button class="filter-btn">해외</button>
             </div>
-            <div class="content-grid">
-                <!-- 콘텐츠 카드 1 -->
-                <div class="content-card">
-                    <div class="card-image">
-                        <img src="https://via.placeholder.com/300x180/3498db/ffffff?text=Smash+Technique" alt="스매시 기술">
-                    </div>
-                    <div class="card-content">
-                        <div class="content-meta">
-                            <span>기술 분석</span>
-                            <span>조회수 12.5K</span>
-                        </div>
-                        <h3>프로처럼 스매시 치는 방법</h3>
-                        <p>효과적인 스매시 기술을 배워 경기력을 향상시키세요.</p>
-                        <div class="card-actions">
-                            <button class="btn">보러가기</button>
-                            <span><i class="fas fa-thumbs-up"></i> 245</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 콘텐츠 카드 2 -->
-                <div class="content-card">
-                    <div class="card-image">
-                        <img src="https://via.placeholder.com/300x180/e74c3c/ffffff?text=Seoul+Open+Final" alt="서울 오픈 결승">
-                    </div>
-                    <div class="card-content">
-                        <div class="content-meta">
-                            <span>하이라이트</span>
-                            <span>실시간</span>
-                        </div>
-                        <h3>2025 서울 오픈 결승 하이라이트</h3>
-                        <p>국내 최고 선수들의 박진감 넘치는 승부를 지금 확인하세요.</p>
-                        <div class="card-actions">
-                            <button class="btn">시청하기</button>
-                            <span><i class="fas fa-eye"></i> 1.8K</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 콘텐츠 카드 3 -->
-                <div class="content-card">
-                    <div class="card-image">
-                        <img src="https://via.placeholder.com/300x180/2ecc71/ffffff?text=Footwork+Lesson" alt="풋워크 레슨">
-                    </div>
-                    <div class="card-content">
-                        <div class="content-meta">
-                            <span>레슨</span>
-                            <span>초급자용</span>
-                        </div>
-                        <h3>기초 풋워크 마스터하기</h3>
-                        <p>올바른 발동작으로 코트 전체를 효율적으로 커버하는 법을 배워보세요.</p>
-                        <div class="card-actions">
-                            <button class="btn">레슨 상세보기</button>
-                            <span><i class="fas fa-star"></i> 4.9</span>
-                        </div>
-                    </div>
-                </div>
-                 <!-- 콘텐츠 카드 4 (추가) -->
-                <div class="content-card">
-                    <div class="card-image">
-                        <img src="https://via.placeholder.com/300x180/9b59b6/ffffff?text=Player+Interview" alt="선수 인터뷰">
-                    </div>
-                    <div class="card-content">
-                        <div class="content-meta">
-                            <span>인터뷰</span>
-                            <span>어제</span>
-                        </div>
-                        <h3>우승자 인터뷰: 김민수 선수</h3>
-                        <p>서울 오픈 남자 단식 우승자 김민수 선수의 소감을 들어보세요.</p>
-                        <div class="card-actions">
-                            <button class="btn">영상 보기</button>
-                            <span><i class="fas fa-comments"></i> 58</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 동호인 대회 플랫폼 섹션 -->
-    <section class="tournament-platforms-section" style="background-color: white;">
-        <div class="container">
-            <h2 class="section-title">동호인 대회 플랫폼 바로가기</h2>
-            <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-
-                <!-- Sponet -->
-                <a href="https://sponet.co.kr/BM/m/index.jsp" target="_blank" rel="noopener noreferrer" class="feature-card" style="padding: 1.5rem;">
-                    <div class="feature-icon" style="font-size: 2.5rem; margin-bottom: 0.8rem;"><img src="https://via.placeholder.com/50x50/e74c3c/ffffff?text=S" alt="Sponet Logo" style="border-radius: 5px;"></div>
-                   <h3 style="font-size: 1.1rem;">스포넷</h3>
-                   <p style="font-size: 0.9rem;">대회 신청 및 결과</p>
-               </a>
-                <!-- Wekkuk Live -->
-                <a href="https://wekkuklive.com" target="_blank" rel="noopener noreferrer" class="feature-card" style="padding: 1.5rem;">
-                     <div class="feature-icon" style="font-size: 2.5rem; margin-bottom: 0.8rem;"><img src="https://via.placeholder.com/50x50/2ecc71/ffffff?text=W" alt="Wekkuk Live Logo" style="border-radius: 5px;"></div>
-                    <h3 style="font-size: 1.1rem;">위꾹라이브</h3>
-                    <p style="font-size: 0.9rem;">실시간 중계 및 정보</p>
-                </a>
-                
-                <!-- Baef -->
-                <a href="https://bf.oopy.io/" target="_blank" rel="noopener noreferrer" class="feature-card" style="padding: 1.5rem;">
-                    <div class="feature-icon" style="font-size: 2.5rem; margin-bottom: 0.8rem;"><img src="https://via.placeholder.com/50x50/9b59b6/ffffff?text=B" alt="Baef Logo" style="border-radius: 5px;"></div>
-                   <h3 style="font-size: 1.1rem;">배프 (Baef)</h3>
-                   <p style="font-size: 0.9rem;">대회 정보 및 소셜</p>
-               </a>
-                <!-- Ddakplay -->
-                <a href="http://www.ddakplay.com" target="_blank" rel="noopener noreferrer" class="feature-card" style="padding: 1.5rem;">
-                     <div class="feature-icon" style="font-size: 2.5rem; margin-bottom: 0.8rem;"><img src="https://via.placeholder.com/50x50/f1c40f/ffffff?text=D" alt="Ddakplay Logo" style="border-radius: 5px;"></div>
-                    <h3 style="font-size: 1.1rem;">딱플</h3>
-                    <p style="font-size: 0.9rem;">대회 정보 및 커뮤니티</p>
-                </a>
-              
+            <div class="channel-grid">
+                <!-- 비디오 카드가 여기에 동적으로 추가됩니다 -->
             </div>
         </div>
     </section>
@@ -1253,6 +1335,8 @@
         </div>
     </section>
 
+    <!-- 인기 콘텐츠 섹션 (삭제됨) -->
+
     <!-- 커뮤니티 섹션 -->
     <section class="community-section" id="community">
         <div class="container">
@@ -1332,136 +1416,6 @@
         </div>
     </section>
 
-    <!-- 유튜브 채널 섹션 -->
-    <section class="youtube-section">
-        <div class="container">
-            <h2 class="section-title">추천 배드민턴 유튜브 채널</h2>
-            <div class="filter-controls">
-                <button class="filter-btn active">인기순</button>
-                <button class="filter-btn">업로드순</button>
-                <button class="filter-btn">구독자순</button>
-                <button class="filter-btn">국내</button>
-                <button class="filter-btn">해외</button>
-            </div>
-            <div class="channel-grid">
-                <!-- 채널 카드 1 -->
-                <div class="channel-card">
-                    <div class="channel-banner">
-                        <img src="https://via.placeholder.com/280x100/8e44ad/ffffff?text=Channel+Banner+1" alt="채널 배너">
-                    </div>
-                    <div class="channel-info">
-                        <img src="https://via.placeholder.com/60x60/ecf0f1/8e44ad?text=BM" alt="채널 아바타" class="channel-avatar">
-                        <div>
-                            <h3>배드민턴 마스터</h3>
-                            <p>구독자 125K</p>
-                        </div>
-                    </div>
-                    <div class="channel-stats">
-                        <span>총 영상 328개</span>
-                        <span>평균 조회수 45K</span>
-                    </div>
-                    <div class="channel-videos">
-                        <h4>최신 업로드</h4>
-                        <div class="channel-video">
-                            <div class="video-thumbnail">
-                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid1" alt="비디오 썸네일">
-                            </div>
-                            <div class="video-info">
-                                <h4>초보자를 위한 스텝 워크 완벽 가이드</h4>
-                                <p>3일 전 • 조회수 32K</p>
-                            </div>
-                        </div>
-                        <div class="channel-video">
-                            <div class="video-thumbnail">
-                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid2" alt="비디오 썸네일">
-                            </div>
-                            <div class="video-info">
-                                <h4>강력한 스매시를 위한 3가지 팁</h4>
-                                <p>1주 전 • 조회수 58K</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 채널 카드 2 (Completed) -->
-                <div class="channel-card">
-                    <div class="channel-banner">
-                        <img src="https://via.placeholder.com/280x100/2980b9/ffffff?text=Channel+Banner+2" alt="채널 배너">
-                    </div>
-                    <div class="channel-info">
-                        <img src="https://via.placeholder.com/60x60/ecf0f1/2980b9?text=SL" alt="채널 아바타" class="channel-avatar">
-                        <div>
-                            <h3>셔틀콕 라이프</h3>
-                            <p>구독자 88K</p>
-                        </div>
-                    </div>
-                    <div class="channel-stats">
-                        <span>총 영상 152개</span>
-                        <span>평균 조회수 30K</span>
-                    </div>
-                    <div class="channel-videos">
-                        <h4>인기 영상</h4>
-                        <div class="channel-video">
-                            <div class="video-thumbnail">
-                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid3" alt="비디오 썸네일">
-                            </div>
-                            <div class="video-info">
-                                <h4>배드민턴 복식 전략 A to Z</h4>
-                                <p>1개월 전 • 조회수 110K</p>
-                            </div>
-                        </div>
-                        <div class="channel-video">
-                            <div class="video-thumbnail">
-                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid4" alt="비디오 썸네일">
-                            </div>
-                            <div class="video-info">
-                                <h4>헤어핀 기술, 이것만 알면 된다!</h4>
-                                <p>2주 전 • 조회수 75K</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 <!-- 채널 카드 3 (추가) -->
-                <div class="channel-card">
-                    <div class="channel-banner">
-                        <img src="https://via.placeholder.com/280x100/c0392b/ffffff?text=Channel+Banner+3" alt="채널 배너">
-                    </div>
-                    <div class="channel-info">
-                        <img src="https://via.placeholder.com/60x60/ecf0f1/c0392b?text=GT" alt="채널 아바타" class="channel-avatar">
-                        <div>
-                            <h3>글로벌 배드민턴 TV</h3>
-                            <p>구독자 350K</p>
-                        </div>
-                    </div>
-                    <div class="channel-stats">
-                        <span>총 영상 800+개</span>
-                        <span>해외 채널</span>
-                    </div>
-                    <div class="channel-videos">
-                        <h4>최신 하이라이트</h4>
-                        <div class="channel-video">
-                            <div class="video-thumbnail">
-                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid5" alt="비디오 썸네일">
-                            </div>
-                            <div class="video-info">
-                                <h4>All England 2025 Finals Highlights</h4>
-                                <p>1일 전 • 조회수 250K</p>
-                            </div>
-                        </div>
-                        <div class="channel-video">
-                            <div class="video-thumbnail">
-                                <img src="https://via.placeholder.com/100x60/bdc3c7/7f8c8d?text=Vid6" alt="비디오 썸네일">
-                            </div>
-                            <div class="video-info">
-                                <h4>Top 10 Rallies of the Month</h4>
-                                <p>5일 전 • 조회수 180K</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- 푸터 -->
     <footer>
         <div class="container">
@@ -1513,118 +1467,289 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const channelGrid = document.querySelector('.youtube-section .channel-grid');
-            const livePlayer = document.querySelector('.live-player'); // Get the player container
-            const fullscreenBtn = document.querySelector('.fullscreen-btn'); // Get the fullscreen button
-            const liveIframe = document.getElementById('live-iframe'); // Get the iframe
+            // --- Constants for localStorage keys (must match admin.js) ---
+            const LS_VIDEOS_KEY = 'badmintonHubVideos';
+            const LS_APPS_KEY = 'badmintonHubApps';
+            const LS_SCHEDULE_KEY = 'badmintonHubSchedule';
 
-            // --- Fetch and display videos.json ---
-            fetch('videos.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(videos => {
-                    if (!channelGrid) {
-                        console.error('Error: Could not find channel grid element (.youtube-section .channel-grid)');
-                        return;
-                    }
-                    console.log('Fetched videos:', videos); // Log fetched data
-                    channelGrid.innerHTML = ''; // Clear existing content
+            // --- DOM Elements ---
+            const videoChannelGrid = document.querySelector('.youtube-section .channel-grid');
+            const appGrid = document.querySelector('.app-links-section .app-grid');
+            const livePlayer = document.querySelector('.live-player');
+            const fullscreenBtn = document.querySelector('.fullscreen-btn');
+            const liveIframe = document.getElementById('live-iframe');
+            const calendarDaysContainer = document.getElementById('calendar-days');
+            const currentMonthYearEl = document.getElementById('current-month-year');
+            const prevMonthBtn = document.getElementById('prev-month-btn');
+            const nextMonthBtn = document.getElementById('next-month-btn');
 
-                    if (!Array.isArray(videos)) {
-                        console.error('Error: Fetched data is not an array.');
-                        channelGrid.innerHTML = '<p style="color: red; text-align: center;">영상 데이터를 불러오는 데 문제가 발생했습니다.</p>';
-                        return;
-                    }
+            // --- Calendar State ---
+            let currentDisplayedDate = new Date();
+            let allScheduleData = []; // To store loaded schedule
+            let allAppData = []; // To store loaded app data for calendar linking
+
+            // --- Load Data Functions ---
+            function loadVideos() {
+                if (!videoChannelGrid) {
+                    console.error('Video channel grid not found.');
+                    return;
+                }
+                videoChannelGrid.innerHTML = ''; // Clear existing
+                try {
+                    const videos = JSON.parse(localStorage.getItem(LS_VIDEOS_KEY) || '[]');
+                    console.log('Loaded videos from localStorage:', videos);
+
+                    if (!Array.isArray(videos)) throw new Error("Video data is not an array.");
+
                     if (videos.length === 0) {
-                         console.log('No videos found in videos.json.');
-                         channelGrid.innerHTML = '<p style="text-align: center;">표시할 추천 영상이 없습니다.</p>';
-                         return;
+                        videoChannelGrid.innerHTML = '<p style="text-align: center;">표시할 추천 영상이 없습니다.</p>';
+                        return;
                     }
 
-                    // Create video cards based on the target layout (simplified)
                     videos.forEach((video, index) => {
-                        try { // Add try block for individual card creation
-                            console.log(`Processing video ${index}:`, video);
-                            if (!video || !video.id) {
-                                console.warn(`Skipping invalid video data at index ${index}:`, video);
-                                return; // Use 'continue' equivalent in forEach by returning
-                            }
-
-                            const card = document.createElement('div');
-                            card.classList.add('video-card'); // Use a new class for styling
-
+                        if (!video || !video.id) {
+                            console.warn(`Skipping invalid video data at index ${index}:`, video);
+                            return;
+                        }
+                        const card = document.createElement('div');
+                        card.classList.add('video-card');
                         const link = document.createElement('a');
-                        link.href = `https://www.youtube.com/watch?v=${video.id}`;
+                        link.href = video.url || `https://www.youtube.com/watch?v=${video.id}`;
                         link.target = '_blank';
                         link.rel = 'noopener noreferrer';
 
-                        // Thumbnail
                         const thumbnailDiv = document.createElement('div');
                         thumbnailDiv.classList.add('video-thumbnail-container');
                         const thumbnailImg = document.createElement('img');
-                        // Use hqdefault for potentially better quality if available
-                        thumbnailImg.src = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+                        thumbnailImg.src = video.thumbnail || `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
                         thumbnailImg.alt = video.title || 'YouTube Video Thumbnail';
-                        // Add fallback to mqdefault if hqdefault fails to load
-                        thumbnailImg.onerror = () => {
-                            console.warn(`hqdefault thumbnail failed for ${video.id}, trying mqdefault.`);
-                            thumbnailImg.src = `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
-                            thumbnailImg.onerror = null; // Prevent infinite loop if mqdefault also fails
-                         };
+                        thumbnailImg.onerror = () => { // Basic fallback
+                            thumbnailImg.src = `https://img.youtube.com/vi/${video.id}/default.jpg`;
+                            thumbnailImg.onerror = null;
+                        };
                         thumbnailDiv.appendChild(thumbnailImg);
                         link.appendChild(thumbnailDiv);
 
-                        // Details below thumbnail
                         const detailsDiv = document.createElement('div');
                         detailsDiv.classList.add('video-details');
-
-                        // Title
                         const titleDiv = document.createElement('div');
                         titleDiv.classList.add('video-title');
-                        titleDiv.textContent = video.title || `영상 ${video.id}`; // Use title from JSON or default
+                        titleDiv.textContent = video.title || `영상 ${video.id}`;
                         detailsDiv.appendChild(titleDiv);
-
-                        // --- Placeholder for future data (Channel, Views, Time) ---
-                        // const channelDiv = document.createElement('div');
-                        // channelDiv.classList.add('video-channel-info');
-                        // channelDiv.textContent = 'Channel Name Here'; // Replace with data later
-                        // detailsDiv.appendChild(channelDiv);
-                        //
-                        // const metaDiv = document.createElement('div');
-                        // metaDiv.classList.add('video-meta');
-                        // metaDiv.textContent = 'Views • Time'; // Replace with data later
-                        // detailsDiv.appendChild(metaDiv);
-                        // ---------------------------------------------------------
-
-                            link.appendChild(detailsDiv);
-                            card.appendChild(link);
-                            channelGrid.appendChild(card);
-
-                        } catch (cardError) {
-                            console.error(`Error creating card for video at index ${index}:`, video, cardError);
-                            // Optionally add a placeholder error card to the grid
-                            const errorCard = document.createElement('div');
-                            errorCard.textContent = `영상 ${index + 1} 로딩 오류`;
-                            errorCard.style.color = 'red';
-                            errorCard.style.padding = '1rem';
-                            errorCard.style.border = '1px solid red';
-                            channelGrid.appendChild(errorCard);
-                        }
+                        link.appendChild(detailsDiv);
+                        card.appendChild(link);
+                        videoChannelGrid.appendChild(card);
                     });
-                })
-                .catch(error => {
-                    // This catch handles errors during fetch or initial JSON parsing
-                    console.error('Error fetching or parsing videos.json:', error);
-                    if (channelGrid) { // Ensure channelGrid exists before modifying
-                       channelGrid.innerHTML = '<p style="color: red; text-align: center;">영상 목록 파일을 불러오는 중 오류가 발생했습니다.</p>';
+                } catch (error) {
+                    console.error('Error loading or displaying videos:', error);
+                    videoChannelGrid.innerHTML = '<p style="color: red; text-align: center;">추천 영상을 불러오는 중 오류가 발생했습니다.</p>';
+                }
+            }
+
+            function loadApps() {
+                if (!appGrid) {
+                    console.error('App grid not found.');
+                    return;
+                }
+                appGrid.innerHTML = ''; // Clear existing
+                try {
+                    allAppData = JSON.parse(localStorage.getItem(LS_APPS_KEY) || '[]'); // Store globally
+                    console.log('Loaded apps from localStorage:', allAppData);
+
+                    if (!Array.isArray(allAppData)) throw new Error("App data is not an array.");
+
+                    if (allAppData.length === 0) {
+                        appGrid.innerHTML = '<p style="text-align: center;">표시할 어플 정보가 없습니다.</p>';
+                        return;
                     }
+
+                    allAppData.forEach(app => {
+                        // Use iconUrl now, check if name and iconUrl exist
+                        if (!app || !app.name || !app.iconUrl) {
+                            console.warn('Skipping incomplete app data (missing name or iconUrl):', app);
+                            return; // Skip if essential info is missing
+                        }
+                        const card = document.createElement('a');
+                        card.classList.add('app-link-card');
+                        card.href = app.link || '#'; // Link or fallback
+                        if (app.link) {
+                            card.target = '_blank';
+                            card.rel = 'noopener noreferrer';
+                        }
+                        card.title = `Open ${app.name}`;
+
+                        const iconContainer = document.createElement('div');
+                        iconContainer.classList.add('app-icon-container');
+                        const iconImg = document.createElement('img');
+                        // Use the iconUrl directly
+                        iconImg.src = app.iconUrl;
+                        iconImg.alt = `${app.name} Icon`;
+                        iconImg.onerror = () => { // Handle broken image links
+                            iconImg.alt = `${app.name} Icon (Not Found)`;
+                            // Optionally display placeholder text or hide image
+                            iconContainer.innerHTML = `<span style="font-size:0.8em; color:#999;">Icon missing</span>`;
+                        };
+                        iconContainer.appendChild(iconImg);
+                        card.appendChild(iconContainer);
+
+                        const nameEl = document.createElement('h3');
+                        nameEl.textContent = app.name;
+                        card.appendChild(nameEl);
+
+                        appGrid.appendChild(card);
+                    });
+                } catch (error) {
+                    console.error('Error loading or displaying apps:', error);
+                    appGrid.innerHTML = '<p style="color: red; text-align: center;">어플 정보를 불러오는 중 오류가 발생했습니다.</p>';
+                }
+            }
+
+            function loadSchedule() {
+                 try {
+                    allScheduleData = JSON.parse(localStorage.getItem(LS_SCHEDULE_KEY) || '[]');
+                    console.log('Loaded schedule from localStorage:', allScheduleData);
+                    if (!Array.isArray(allScheduleData)) throw new Error("Schedule data is not an array.");
+                    // Initial calendar render after loading schedule
+                    renderCalendar(currentDisplayedDate);
+                 } catch (error) {
+                     console.error('Error loading schedule:', error);
+                     // Optionally display an error in the calendar area
+                     if(calendarDaysContainer) calendarDaysContainer.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">일정 로딩 오류</p>';
+                 }
+            }
+
+            // --- Calendar Rendering Function ---
+            function renderCalendar(dateToDisplay) {
+                if (!calendarDaysContainer || !currentMonthYearEl) {
+                    console.error("Calendar elements not found.");
+                    return;
+                }
+                calendarDaysContainer.innerHTML = ''; // Clear previous days
+                const year = dateToDisplay.getFullYear();
+                const month = dateToDisplay.getMonth(); // 0-indexed
+
+                currentMonthYearEl.textContent = `${year}년 ${month + 1}월`;
+
+                const firstDayOfMonth = new Date(year, month, 1);
+                const lastDayOfMonth = new Date(year, month + 1, 0);
+                const daysInMonth = lastDayOfMonth.getDate();
+                const startDayOfWeek = firstDayOfMonth.getDay(); // 0 (Sun) to 6 (Sat)
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Normalize today's date
+
+                // Get days from previous month
+                const lastDayOfPrevMonth = new Date(year, month, 0);
+                const daysInPrevMonth = lastDayOfPrevMonth.getDate();
+
+                // Add cells for previous month's days
+                for (let i = startDayOfWeek - 1; i >= 0; i--) {
+                    const day = daysInPrevMonth - i;
+                    const cell = createCalendarCell(day, month - 1, year, true); // Mark as other month
+                    calendarDaysContainer.appendChild(cell);
+                }
+
+                // Add cells for current month's days
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const cellDate = new Date(year, month, day);
+                    const isToday = cellDate.getTime() === today.getTime();
+                    const cell = createCalendarCell(day, month, year, false, isToday); // Not other month
+                    calendarDaysContainer.appendChild(cell);
+                }
+
+                // Add cells for next month's days to fill the grid (usually 6 rows * 7 cols = 42 cells)
+                const totalCells = calendarDaysContainer.children.length;
+                const remainingCells = (totalCells <= 35 ? 35 : 42) - totalCells; // Aim for 5 or 6 rows
+
+                for (let day = 1; day <= remainingCells; day++) {
+                    const cell = createCalendarCell(day, month + 1, year, true); // Mark as other month
+                    calendarDaysContainer.appendChild(cell);
+                }
+            }
+
+            function createCalendarCell(day, month, year, isOtherMonth, isToday = false) {
+                const cell = document.createElement('div');
+                cell.classList.add('calendar-cell');
+                if (isOtherMonth) cell.classList.add('other-month');
+                if (isToday) cell.classList.add('today');
+
+                const dayNumber = document.createElement('span');
+                dayNumber.classList.add('day-number');
+                dayNumber.textContent = day;
+                cell.appendChild(dayNumber);
+
+                const eventsContainer = document.createElement('div');
+                eventsContainer.classList.add('calendar-events');
+
+                // Find events for this specific date (adjust month for Date object)
+                const cellDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const eventsForDay = allScheduleData.filter(event => event.date === cellDateStr);
+
+                eventsForDay.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.classList.add('calendar-event');
+                    eventDiv.title = event.name; // Tooltip with full name
+
+                    // Find corresponding app data
+                    const app = allAppData.find(a => a.name === event.appName);
+
+                    // Use iconUrl for calendar events too
+                    if (app && app.iconUrl) {
+                        const iconImg = document.createElement('img');
+                        iconImg.src = app.iconUrl;
+                        iconImg.alt = ''; // Decorative
+                        iconImg.classList.add('event-app-icon');
+                        iconImg.onerror = () => { iconImg.style.display = 'none'; }; // Hide if broken
+                        eventDiv.appendChild(iconImg);
+                    }
+
+                    const eventNameSpan = document.createElement('span');
+                    eventNameSpan.classList.add('event-name');
+                    eventNameSpan.textContent = event.name;
+                    eventDiv.appendChild(eventNameSpan);
+
+                    // Make event clickable if app link exists
+                    if (app && app.link) {
+                        eventDiv.style.cursor = 'pointer';
+                        eventDiv.onclick = (e) => {
+                            e.stopPropagation(); // Prevent triggering cell click if needed
+                            window.open(app.link, '_blank');
+                        };
+                        eventDiv.title = `${event.name} (${app.name} 앱 열기)`;
+                    } else {
+                         eventDiv.title = event.name + (app ? ` (${app.name})` : '');
+                    }
+
+
+                    eventsContainer.appendChild(eventDiv);
                 });
 
-            // --- Fullscreen Button Logic ---
+                cell.appendChild(eventsContainer);
+                return cell;
+            }
+
+            // --- Calendar Navigation ---
+            if (prevMonthBtn) {
+                prevMonthBtn.addEventListener('click', () => {
+                    currentDisplayedDate.setMonth(currentDisplayedDate.getMonth() - 1);
+                    renderCalendar(currentDisplayedDate);
+                });
+            }
+            if (nextMonthBtn) {
+                nextMonthBtn.addEventListener('click', () => {
+                    currentDisplayedDate.setMonth(currentDisplayedDate.getMonth() + 1);
+                    renderCalendar(currentDisplayedDate);
+                });
+            }
+
+
+            // --- Initial Load Sequence ---
+            loadApps(); // Load apps first so calendar can use app data
+            loadSchedule(); // Load schedule and render calendar
+            loadVideos(); // Load videos independently
+
+
+            // --- Fullscreen Button Logic (Keep this) ---
             if (fullscreenBtn && livePlayer && liveIframe) {
                 fullscreenBtn.addEventListener('click', () => {
                     // Check if fullscreen is supported and not already active

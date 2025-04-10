@@ -1,17 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Constants for localStorage keys ---
+    const LS_VIDEOS_KEY = 'badmintonHubVideos';
+    const LS_APPS_KEY = 'badmintonHubApps';
+    const LS_SCHEDULE_KEY = 'badmintonHubSchedule';
+    const MAX_ITEMS = 5; // Max videos and apps
+
+    // --- DOM Elements ---
     const authContainer = document.getElementById('auth-container');
     const mainContent = document.getElementById('main-content');
-    // Get all individual URL input fields
-    const urlInputs = [
-        document.getElementById('video-url-1'),
-        document.getElementById('video-url-2'),
-        document.getElementById('video-url-3'),
-        document.getElementById('video-url-4'),
-        document.getElementById('video-url-5'),
-    ];
-    const updateButton = document.getElementById('update-button');
 
-    // --- Helper function to extract YouTube Video ID (Further Refined) ---
+    // Video Inputs
+    const videoUrlInputs = Array.from(document.querySelectorAll('.video-url-input')); // Use querySelectorAll
+
+    // App Inputs (Grouped)
+    const appInputsContainer = document.getElementById('app-inputs-container');
+    const appNameInputs = Array.from(appInputsContainer.querySelectorAll('.app-name-input'));
+    const appLinkInputs = Array.from(appInputsContainer.querySelectorAll('.app-link-input'));
+    const appIconUrlInputs = Array.from(appInputsContainer.querySelectorAll('.app-icon-url-input')); // Changed class selector
+
+    // Schedule Elements
+    const scheduleListContainer = document.getElementById('schedule-list-container');
+    const addScheduleButton = document.getElementById('add-schedule-button');
+
+    // Save Button
+    const saveAllButton = document.getElementById('save-all-button'); // Renamed button ID
+
+    // --- Helper function to extract YouTube Video ID (Keep this) ---
     function extractVideoId(url) {
         if (!url) return null;
         let videoId = null;
@@ -63,121 +77,186 @@ document.addEventListener('DOMContentLoaded', () => {
         return videoId; // Return null if no valid ID found
     }
 
-    // --- Update and Download JSON ---
-    updateButton.addEventListener('click', () => {
-        const newVideos = [];
-        const processedIds = new Set(); // Keep track of added IDs to avoid duplicates
-        console.log("--- Processing URLs from input fields ---"); // Log start
+    // --- Schedule Management Functions ---
+    function createScheduleItemElement(item = { date: '', name: '', appName: '' }, apps = []) {
+        const div = document.createElement('div');
+        div.classList.add('schedule-item');
 
-        // Iterate through the input fields
-        for (let i = 0; i < urlInputs.length; i++) {
-            const inputField = urlInputs[i];
-            const url = inputField.value.trim();
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.value = item.date;
+        dateInput.classList.add('schedule-date');
 
-            // Skip empty fields
-            if (!url) {
-                console.log(`Input field ${i + 1} is empty, skipping.`);
-                continue;
-            }
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = '대회명';
+        nameInput.value = item.name;
+        nameInput.classList.add('schedule-name');
 
-            console.log(`Attempting to process URL from input ${i + 1}: ${url}`); // Log each URL
-
-            // We already limit by the number of input fields (5)
-            // if (newVideos.length >= 5) break; // This check is implicitly handled
-
-            const videoId = extractVideoId(url);
-            console.log(`Extracted ID: ${videoId}`); // Log extracted ID (or null)
-
-            if (videoId && !processedIds.has(videoId)) {
-                console.log(`Valid ID found: ${videoId}. Adding to list.`);
-                newVideos.push({
-                    id: videoId,
-                    title: `영상 ${videoId}`, // Default title, index.html uses this if needed
-                    description: '', // Default description
-                    thumbnail: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`, // Used by index.html
-                    url: `https://www.youtube.com/watch?v=${videoId}` // Canonical URL
-                });
-                processedIds.add(videoId);
-            } else if (videoId && processedIds.has(videoId)) {
-                 console.warn(`Duplicate video ID skipped: ${videoId} (URL: ${url})`);
-            } else {
-                 // Warning already logged inside extractVideoId if extraction failed
-                 console.warn(`Skipping URL (Invalid ID or duplicate): ${url}`);
-            }
-        }
-        console.log("--- Finished processing URLs ---"); // Log end
-
-        if (newVideos.length === 0) {
-            alert('입력된 URL 중에서 유효한 유튜브 영상 링크를 찾지 못했습니다.');
-            return;
-        }
-
-        // Generate and trigger download
-        const dataStr = JSON.stringify(newVideos, null, 2); // Pretty print JSON
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const downloadUrl = URL.createObjectURL(dataBlob);
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = 'videos.json';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(downloadUrl);
-
-        console.log('Generated videos.json for download:', newVideos);
-        alert(`${newVideos.length}개의 영상 정보가 포함된 videos.json 파일 다운로드를 시작합니다.\n\n다운로드 완료 후, 이 파일을 badminton_hub 폴더에 덮어쓰기 해주세요.`);
-        // Optionally clear the textarea after successful generation
-        // videoUrlsTextarea.value = '';
-    });
-
-    // --- Load existing video URLs into input fields ---
-    async function loadExistingUrls() {
-        try {
-            // Fetch videos.json with cache busting
-            const response = await fetch('videos.json?t=' + Date.now());
-            if (!response.ok) {
-                if (response.status === 404) {
-                    console.log('videos.json not found. Input fields will be empty.');
-                    // Clear inputs if file not found
-                    urlInputs.forEach(input => input.value = '');
-                    return;
+        const appSelect = document.createElement('select');
+        appSelect.classList.add('schedule-app');
+        appSelect.innerHTML = '<option value="">연결된 어플 없음</option>'; // Default option
+        apps.forEach(app => {
+            if (app.name) { // Only add apps with names
+                const option = document.createElement('option');
+                option.value = app.name;
+                option.textContent = app.name;
+                if (item.appName === app.name) {
+                    option.selected = true;
                 }
-                throw new Error(`HTTP error! status: ${response.status}`);
+                appSelect.appendChild(option);
             }
-            const existingVideos = await response.json();
+        });
 
-            if (Array.isArray(existingVideos)) {
-                console.log('Loaded existing videos:', existingVideos);
-                // Populate input fields
-                urlInputs.forEach((input, index) => {
-                    if (existingVideos[index] && existingVideos[index].url) {
-                        input.value = existingVideos[index].url;
-                    } else {
-                        input.value = ''; // Clear field if no corresponding video exists
-                    }
-                });
-            } else {
-                 console.warn('videos.json content is not an array. Clearing inputs.');
-                 urlInputs.forEach(input => input.value = '');
-            }
-        } catch (error) {
-            console.error('Error loading existing videos for admin inputs:', error);
-            // Optionally clear inputs on error
-            urlInputs.forEach(input => input.value = '');
-        }
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '삭제';
+        deleteButton.classList.add('delete');
+        deleteButton.type = 'button'; // Prevent form submission if wrapped in form later
+        deleteButton.onclick = () => {
+            div.remove();
+            console.log('Schedule item removed.');
+        };
+
+        div.appendChild(dateInput);
+        div.appendChild(nameInput);
+        div.appendChild(appSelect);
+        div.appendChild(deleteButton);
+        return div;
     }
 
+    function addScheduleItem(item, apps) {
+        if (!scheduleListContainer) return;
+        const scheduleElement = createScheduleItemElement(item, apps);
+        scheduleListContainer.appendChild(scheduleElement);
+    }
+
+    // --- Load Data from localStorage ---
+    function loadData() {
+        console.log('Loading data from localStorage...');
+        // Load Videos
+        const storedVideos = JSON.parse(localStorage.getItem(LS_VIDEOS_KEY) || '[]');
+        videoUrlInputs.forEach((input, index) => {
+            input.value = storedVideos[index]?.url || '';
+        });
+        console.log('Loaded videos:', storedVideos);
+
+        // Load Apps
+        const storedApps = JSON.parse(localStorage.getItem(LS_APPS_KEY) || '[]');
+        appNameInputs.forEach((input, index) => {
+            input.value = storedApps[index]?.name || '';
+        });
+        appLinkInputs.forEach((input, index) => {
+            input.value = storedApps[index]?.link || '';
+        });
+        appIconUrlInputs.forEach((input, index) => { // Changed variable name
+            input.value = storedApps[index]?.iconUrl || ''; // Changed property name
+        });
+        console.log('Loaded apps:', storedApps);
+
+        // Load Schedule
+        const storedSchedule = JSON.parse(localStorage.getItem(LS_SCHEDULE_KEY) || '[]');
+        scheduleListContainer.innerHTML = ''; // Clear existing schedule items
+        storedSchedule.forEach(item => addScheduleItem(item, storedApps)); // Pass loaded apps for dropdown
+        console.log('Loaded schedule:', storedSchedule);
+    }
+
+    // --- Save Data to localStorage ---
+    function saveData() {
+        console.log('Saving data to localStorage...');
+        // Save Videos
+        const videosToSave = [];
+        const processedVideoIds = new Set();
+        videoUrlInputs.forEach(input => {
+            const url = input.value.trim();
+            if (url) {
+                const videoId = extractVideoId(url);
+                if (videoId && !processedVideoIds.has(videoId)) {
+                    videosToSave.push({
+                        id: videoId,
+                        title: `영상 ${videoId}`, // Default title
+                        thumbnail: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+                        url: `https://www.youtube.com/watch?v=${videoId}`
+                    });
+                    processedVideoIds.add(videoId);
+                } else if (videoId) {
+                    console.warn(`Duplicate video ID skipped during save: ${videoId}`);
+                } else {
+                    console.warn(`Invalid video URL skipped during save: ${url}`);
+                }
+            }
+        });
+        localStorage.setItem(LS_VIDEOS_KEY, JSON.stringify(videosToSave));
+        console.log('Saved videos:', videosToSave);
+
+        // Save Apps
+        const appsToSave = [];
+        for (let i = 0; i < MAX_ITEMS; i++) {
+            const name = appNameInputs[i].value.trim();
+            const link = appLinkInputs[i].value.trim();
+            const iconUrl = appIconUrlInputs[i].value.trim(); // Changed variable and input source
+            // Only save if at least name or iconUrl is provided
+            if (name || iconUrl) {
+                appsToSave.push({ name, link, iconUrl }); // Changed property name
+            } else {
+                 appsToSave.push({}); // Keep placeholder for indexing if needed, or filter later
+            }
+        }
+        // Filter out completely empty entries before saving
+        const filteredApps = appsToSave.filter(app => app.name || app.link || app.iconUrl); // Changed property name
+        localStorage.setItem(LS_APPS_KEY, JSON.stringify(filteredApps));
+        console.log('Saved apps:', filteredApps);
+
+        // Save Schedule
+        const scheduleToSave = [];
+        const scheduleItems = scheduleListContainer.querySelectorAll('.schedule-item');
+        scheduleItems.forEach(item => {
+            const date = item.querySelector('.schedule-date').value;
+            const name = item.querySelector('.schedule-name').value.trim();
+            const appName = item.querySelector('.schedule-app').value;
+            if (date && name) { // Only save if date and name are present
+                scheduleToSave.push({ date, name, appName });
+            }
+        });
+        localStorage.setItem(LS_SCHEDULE_KEY, JSON.stringify(scheduleToSave));
+        console.log('Saved schedule:', scheduleToSave);
+
+        alert('모든 변경사항이 브라우저에 저장되었습니다.');
+    }
+
+    // --- Event Listeners ---
+    if (saveAllButton) {
+        saveAllButton.addEventListener('click', saveData);
+    } else {
+        console.error('Save button not found!');
+    }
+
+    if (addScheduleButton) {
+        addScheduleButton.addEventListener('click', () => {
+            // Get current apps to populate the dropdown in the new item
+            const currentApps = [];
+             for (let i = 0; i < MAX_ITEMS; i++) {
+                const name = appNameInputs[i].value.trim();
+                if (name) {
+                    currentApps.push({ name }); // Only need name for dropdown
+                }
+            }
+            addScheduleItem(undefined, currentApps); // Add empty item with current apps
+        });
+    } else {
+        console.error('Add schedule button not found!');
+    }
 
     // --- Authentication ---
     function authenticate() {
         const password = prompt("관리자 비밀번호를 입력하세요:");
+        // !! Use a more secure method in a real application !!
         const correctPassword = "admin123"; // Simple hardcoded password
 
         if (password === correctPassword) {
             console.log("Authentication successful.");
             authContainer.style.display = 'none'; // Hide auth message
             mainContent.style.display = 'block'; // Show main content
-            loadExistingUrls(); // Load existing URLs after successful authentication
+            loadData(); // Load all data from localStorage after successful authentication
         } else {
             console.log("Authentication failed.");
             authContainer.innerHTML = '<p style="color: red;">인증 실패. 접근이 거부되었습니다.</p>';

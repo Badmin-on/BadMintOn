@@ -106,13 +106,43 @@
         li strong {
             font-size: 1.1em;
         }
-        #add-video-form {
+        .form-section {
             border-bottom: 1px solid #eee;
             padding-bottom: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
-        #current-videos h2 {
-            margin-top: 30px;
+        .input-group {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .input-group label {
+            font-weight: normal; /* Less bold labels inside groups */
+            color: #555;
+        }
+        .schedule-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .schedule-item input {
+            margin-bottom: 0; /* Remove default margin */
+            flex-grow: 1;
+        }
+        .schedule-item input[type="date"] {
+            max-width: 150px; /* Limit date input width */
+            flex-grow: 0;
+        }
+        .schedule-item button {
+            padding: 5px 10px;
+            font-size: 0.9em;
+            flex-shrink: 0; /* Prevent button shrinking */
         }
     </style>
 </head>
@@ -123,36 +153,116 @@
     </div>
 
     <div class="container" id="main-content" style="display: none;"> <!-- Initially hidden -->
-        <h1>유튜브 영상 관리</h1>
+        <h1>배드민턴 허브 관리자 페이지</h1>
 
-        <div id="update-videos-form">
-            <h2>메인 페이지 영상 업데이트 (최대 5개)</h2>
+        <!-- Section 1: YouTube Videos -->
+        <div id="videos-section" class="form-section">
+            <h2>추천 영상 관리 (최대 5개)</h2>
             <div id="video-inputs-container">
-                <label for="video-url-1">영상 1 URL:</label>
-                <input type="url" id="video-url-1" class="video-url-input" placeholder="유튜브 영상 URL 입력">
-
-                <label for="video-url-2">영상 2 URL:</label>
-                <input type="url" id="video-url-2" class="video-url-input" placeholder="유튜브 영상 URL 입력">
-
-                <label for="video-url-3">영상 3 URL:</label>
-                <input type="url" id="video-url-3" class="video-url-input" placeholder="유튜브 영상 URL 입력">
-
-                <label for="video-url-4">영상 4 URL:</label>
-                <input type="url" id="video-url-4" class="video-url-input" placeholder="유튜브 영상 URL 입력">
-
-                <label for="video-url-5">영상 5 URL:</label>
-                <input type="url" id="video-url-5" class="video-url-input" placeholder="유튜브 영상 URL 입력">
+                <!-- Video Input Group 1 -->
+                <div class="input-group">
+                    <label for="video-url-1">영상 1 URL:</label>
+                    <input type="url" id="video-url-1" class="video-url-input" placeholder="유튜브 영상 URL 입력">
+                    <!-- Title input can be added if needed -->
+                </div>
+                <!-- Video Input Group 2 -->
+                <div class="input-group">
+                    <label for="video-url-2">영상 2 URL:</label>
+                    <input type="url" id="video-url-2" class="video-url-input" placeholder="유튜브 영상 URL 입력">
+                </div>
+                <!-- Video Input Group 3 -->
+                <div class="input-group">
+                    <label for="video-url-3">영상 3 URL:</label>
+                    <input type="url" id="video-url-3" class="video-url-input" placeholder="유튜브 영상 URL 입력">
+                </div>
+                <!-- Video Input Group 4 -->
+                <div class="input-group">
+                    <label for="video-url-4">영상 4 URL:</label>
+                    <input type="url" id="video-url-4" class="video-url-input" placeholder="유튜브 영상 URL 입력">
+                </div>
+                <!-- Video Input Group 5 -->
+                <div class="input-group">
+                    <label for="video-url-5">영상 5 URL:</label>
+                    <input type="url" id="video-url-5" class="video-url-input" placeholder="유튜브 영상 URL 입력">
+                </div>
             </div>
-
-            <button id="update-button">영상 목록 업데이트</button>
-            <p style="font-size: 0.9em; color: #555; margin-top: 10px;">
-                '업데이트' 버튼을 누르면 입력된 유효한 URL (최대 5개)으로<br>
-                메인 페이지의 '추천 배드민턴 유튜브 채널' 섹션이 즉시 변경됩니다.<br>
-                (기존 `videos.json` 파일은 덮어쓰여집니다.)
-            </p>
         </div>
 
-        <!-- 현재 영상 목록 및 다운로드 버튼은 제거 (직접 업데이트 방식으로 변경) -->
+        <!-- Section 2: App Information -->
+        <div id="apps-section" class="form-section">
+            <h2>어플 정보 관리 (최대 5개)</h2>
+            <p style="font-size: 0.9em; color: #555; margin-bottom: 15px;">
+                메인 페이지에 표시될 어플 정보입니다.<br>
+                아이콘 파일명은 `badminton_hub/image` 폴더에 있는 실제 파일명과 일치해야 합니다.<br>
+                (예: `bf_icon.png`, `76vs_icon.png`, `sponet_icon.png`, `flk_icon.png`)
+            </p>
+            <div id="app-inputs-container">
+                <!-- App Input Group 1 -->
+                <div class="input-group">
+                    <label for="app-name-1">어플 1 이름:</label>
+                    <input type="text" id="app-name-1" class="app-name-input" placeholder="어플 이름 (예: 배드민턴 프렌즈)">
+                    <label for="app-link-1">어플 1 링크:</label>
+                    <input type="url" id="app-link-1" class="app-link-input" placeholder="어플 스토어 또는 웹사이트 링크">
+                    <label for="app-icon-url-1">어플 1 아이콘 이미지 URL:</label>
+                    <input type="url" id="app-icon-url-1" class="app-icon-url-input" placeholder="아이콘 이미지 주소 (예: https://...)">
+                </div>
+                <!-- App Input Group 2 -->
+                <div class="input-group">
+                    <label for="app-name-2">어플 2 이름:</label>
+                    <input type="text" id="app-name-2" class="app-name-input" placeholder="어플 이름">
+                    <label for="app-link-2">어플 2 링크:</label>
+                    <input type="url" id="app-link-2" class="app-link-input" placeholder="어플 링크">
+                    <label for="app-icon-url-2">어플 2 아이콘 이미지 URL:</label>
+                    <input type="url" id="app-icon-url-2" class="app-icon-url-input" placeholder="아이콘 이미지 주소">
+                </div>
+                <!-- App Input Group 3 -->
+                <div class="input-group">
+                     <label for="app-name-3">어플 3 이름:</label>
+                     <input type="text" id="app-name-3" class="app-name-input" placeholder="어플 이름">
+                     <label for="app-link-3">어플 3 링크:</label>
+                     <input type="url" id="app-link-3" class="app-link-input" placeholder="어플 링크">
+                     <label for="app-icon-url-3">어플 3 아이콘 이미지 URL:</label>
+                     <input type="url" id="app-icon-url-3" class="app-icon-url-input" placeholder="아이콘 이미지 주소">
+                </div>
+                <!-- App Input Group 4 -->
+                <div class="input-group">
+                     <label for="app-name-4">어플 4 이름:</label>
+                     <input type="text" id="app-name-4" class="app-name-input" placeholder="어플 이름">
+                     <label for="app-link-4">어플 4 링크:</label>
+                     <input type="url" id="app-link-4" class="app-link-input" placeholder="어플 링크">
+                     <label for="app-icon-url-4">어플 4 아이콘 이미지 URL:</label>
+                     <input type="url" id="app-icon-url-4" class="app-icon-url-input" placeholder="아이콘 이미지 주소">
+                </div>
+                <!-- App Input Group 5 -->
+                <div class="input-group">
+                     <label for="app-name-5">어플 5 이름:</label>
+                     <input type="text" id="app-name-5" class="app-name-input" placeholder="어플 이름">
+                     <label for="app-link-5">어플 5 링크:</label>
+                     <input type="url" id="app-link-5" class="app-link-input" placeholder="어플 링크">
+                     <label for="app-icon-url-5">어플 5 아이콘 이미지 URL:</label>
+                     <input type="url" id="app-icon-url-5" class="app-icon-url-input" placeholder="아이콘 이미지 주소">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Schedule Management -->
+        <div id="schedule-section" class="form-section">
+            <h2>대회 일정 관리</h2>
+            <div id="schedule-list-container">
+                <!-- Schedule items will be added here by JS -->
+            </div>
+            <button id="add-schedule-button" style="margin-top: 10px;">일정 추가</button>
+        </div>
+
+        <!-- Save Button -->
+        <button id="save-all-button">모든 변경사항 저장</button>
+         <p style="font-size: 0.9em; color: #555; margin-top: 10px;">
+            '저장' 버튼을 누르면 입력된 모든 정보(영상, 어플, 일정)가 브라우저의<br>
+            `localStorage`에 저장되어 메인 페이지에 즉시 반영됩니다.<br>
+            (별도의 파일 다운로드 및 업로드 과정이 필요 없습니다.)
+        </p>
+
+        <!-- Removed old video list and download button -->
         <!--
         <div id="current-videos">
             <h2>현재 영상 목록</h2>
