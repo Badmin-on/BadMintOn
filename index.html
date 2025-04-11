@@ -823,7 +823,7 @@
         .channel-grid { /* Grid container for video cards */
             display: grid;
             /* Adjust columns for typical video grid (e.g., 4 columns on wider screens) */
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem; /* Adjust gap between cards */
         }
 
@@ -1032,9 +1032,45 @@
             .footer-grid {
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjust footer columns */
             }
+             /* Calendar adjustments for medium screens */
+            .calendar-cell {
+                min-height: 100px; /* Slightly smaller cells */
+                font-size: 0.9em; /* Reduce base font size slightly */
+            }
+            .calendar-event {
+                font-size: 0.9em; /* Adjust event font size */
+                padding: 2px 4px;
+            }
+             .event-app-icon {
+                 width: 14px;
+                 height: 14px;
+             }
         }
 
         @media (max-width: 576px) {
+             header {
+                 position: static; /* Remove sticky header on small screens */
+                 padding: 0.8rem 0;
+             }
+             .header-container {
+                 gap: 0.5rem; /* Add some gap */
+             }
+             .logo {
+                 font-size: 1.5rem; /* Smaller logo */
+                 margin-bottom: 0.5rem;
+             }
+             nav ul {
+                 gap: 0.3rem 0.8rem; /* Smaller gap */
+                 font-size: 0.9rem; /* Smaller nav font */
+             }
+             .search-box {
+                 padding: 0.4rem 0.8rem;
+             }
+             .user-actions .btn {
+                 padding: 0.4rem 0.8rem;
+                 font-size: 0.9rem;
+             }
+
             .container {
                 width: 95%; /* More width on small screens */
             }
@@ -1055,6 +1091,35 @@
             .live-schedule {
                 border-radius: 0;
             }
+             /* Further reduce calendar size on very small screens */
+            .calendar-cell {
+                min-height: 80px; /* Smaller cells */
+                padding: 4px;
+                font-size: 0.8em;
+            }
+             .calendar-header h3 {
+                 font-size: 1.2rem;
+             }
+             .calendar-header button {
+                 font-size: 1.2rem;
+                 padding: 0.3rem;
+             }
+             .calendar-weekday {
+                 font-size: 0.8em;
+             }
+            .calendar-event {
+                font-size: 0.85em; /* Adjust event font size */
+                padding: 2px 3px;
+                gap: 3px;
+            }
+             .event-app-icon {
+                 width: 12px;
+                 height: 12px;
+             }
+             .calendar-events {
+                 max-height: 50px; /* Limit event container height */
+             }
+
             .footer-grid {
                 text-align: center; /* Center footer content */
             }
@@ -1136,7 +1201,38 @@
     </section>
 
     <!-- ====================================== -->
-    <!-- == 어플 바로가기 섹션 (추가) == -->
+    <!-- == 배드민턴 대회 일정 달력 섹션 (NEW ORDER) == -->
+    <!-- ====================================== -->
+    <section class="calendar-section" id="tournament-calendar">
+        <div class="container">
+            <h2 class="section-title">대회 일정</h2>
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prev-month-btn" title="이전 달"><i class="fas fa-chevron-left"></i></button>
+                    <h3 id="current-month-year"></h3>
+                    <button id="next-month-btn" title="다음 달"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid calendar-weekdays">
+                    <div class="calendar-weekday">일</div>
+                    <div class="calendar-weekday">월</div>
+                    <div class="calendar-weekday">화</div>
+                    <div class="calendar-weekday">수</div>
+                    <div class="calendar-weekday">목</div>
+                    <div class="calendar-weekday">금</div>
+                    <div class="calendar-weekday">토</div>
+                </div>
+                <div class="calendar-grid" id="calendar-days">
+                    <!-- Calendar days will be dynamically generated here -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ====================================== -->
+    <!-- == / 배드민턴 대회 일정 달력 섹션 끝 == -->
+    <!-- ====================================== -->
+
+    <!-- ====================================== -->
+    <!-- == 어플 바로가기 섹션 (NEW ORDER) == -->
     <!-- ====================================== -->
     <section class="app-links-section" id="app-links">
         <div class="container">
@@ -1150,7 +1246,24 @@
     <!-- == / 어플 바로가기 섹션 끝 == -->
     <!-- ====================================== -->
 
-    <!-- 라이브 스트리밍 섹션 (다시 추가) -->
+    <!-- 유튜브 채널 섹션 (NEW ORDER) -->
+    <section class="youtube-section">
+        <div class="container">
+            <h2 class="section-title">추천 배드민턴 유튜브 채널</h2>
+            <div class="filter-controls">
+                <button class="filter-btn active">인기순</button>
+                <button class="filter-btn">업로드순</button>
+                <button class="filter-btn">구독자순</button>
+                <button class="filter-btn">국내</button>
+                <button class="filter-btn">해외</button>
+            </div>
+            <div class="channel-grid">
+                <!-- 비디오 카드가 여기에 동적으로 추가됩니다 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 라이브 스트리밍 섹션 (NEW ORDER) -->
     <section class="live-section" id="live">
         <div class="container">
             <h2 class="section-title">라이브 중계 & 경기 일정</h2>
@@ -1204,57 +1317,6 @@
                         <!-- Add more static items or implement dynamic loading -->
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-     <!-- ====================================== -->
-    <!-- == 배드민턴 대회 일정 달력 섹션 (위치 이동됨) == -->
-    <!-- ====================================== -->
-    <section class="calendar-section" id="tournament-calendar">
-        <div class="container">
-            <h2 class="section-title">대회 일정</h2>
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button id="prev-month-btn" title="이전 달"><i class="fas fa-chevron-left"></i></button>
-                    <h3 id="current-month-year"></h3>
-                    <button id="next-month-btn" title="다음 달"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div class="calendar-grid calendar-weekdays">
-                    <div class="calendar-weekday">일</div>
-                    <div class="calendar-weekday">월</div>
-                    <div class="calendar-weekday">화</div>
-                    <div class="calendar-weekday">수</div>
-                    <div class="calendar-weekday">목</div>
-                    <div class="calendar-weekday">금</div>
-                    <div class="calendar-weekday">토</div>
-                </div>
-                <div class="calendar-grid" id="calendar-days">
-                    <!-- Calendar days will be dynamically generated here -->
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ====================================== -->
-    <!-- == / 배드민턴 대회 일정 달력 섹션 끝 == -->
-    <!-- ====================================== -->
-
-    <!-- 동호인 대회 플랫폼 섹션 (삭제됨) -->
-    <!-- <section class="tournament-platforms-section"> ... </section> -->
-
-    <!-- 유튜브 채널 섹션 -->
-    <section class="youtube-section">
-        <div class="container">
-            <h2 class="section-title">추천 배드민턴 유튜브 채널</h2>
-            <div class="filter-controls">
-                <button class="filter-btn active">인기순</button>
-                <button class="filter-btn">업로드순</button>
-                <button class="filter-btn">구독자순</button>
-                <button class="filter-btn">국내</button>
-                <button class="filter-btn">해외</button>
-            </div>
-            <div class="channel-grid">
-                <!-- 비디오 카드가 여기에 동적으로 추가됩니다 -->
             </div>
         </div>
     </section>
