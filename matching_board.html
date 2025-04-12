@@ -28,6 +28,7 @@
         .items-center { align-items: center; }
         .justify-between { justify-content: space-between; }
         .justify-center { justify-content: center; }
+        .justify-end { justify-content: flex-end; }
         .gap-1 { gap: 0.25rem; }
         .gap-2 { gap: 0.5rem; }
         .space-y-2 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.5rem; }
@@ -81,6 +82,8 @@
         .bg-red-50 { background-color: #fef2f2; }
         .bg-red-100 { background-color: #fee2e2; }
         .bg-purple-600 { background-color: #9333ea; }
+        .bg-orange-500 { background-color: #f97316; }
+        .bg-orange-100 { background-color: #ffedd5; }
         .text-white { color: white; }
         .text-sm { font-size: 0.875rem; }
         .text-xs { font-size: 0.75rem; }
@@ -91,6 +94,7 @@
         .text-blue-700 { color: #1d4ed8; }
         .text-red-600 { color: #dc2626; }
         .text-red-700 { color: #b91c1c; }
+        .text-orange-600 { color: #ea580c; }
         .font-bold { font-weight: 700; }
         .font-semibold { font-weight: 600; }
         .font-medium { font-weight: 500; }
@@ -106,7 +110,7 @@
         /* Drag and Drop Styles */
         .player-button { cursor: grab; }
         .player-button:active { cursor: grabbing; }
-        .drop-zone { border: 2px dashed transparent; transition: border-color 0.2s; min-height: 50px; /* Ensure drop zone has height */ }
+        .drop-zone { border: 2px dashed transparent; transition: border-color 0.2s, background-color 0.2s; min-height: 50px; /* Ensure drop zone has height */ }
         .drop-zone-over { border-color: #2563eb; background-color: #eff6ff; } /* Blue border when dragging over */
         .dragging { opacity: 0.5; border: 2px dashed #9ca3af; } /* Style for the item being dragged */
 
@@ -128,69 +132,45 @@
           { id: 4, players: [], name: '4번 코트' },
           { id: 5, players: [], name: '5번 코트' },
         ]);
-        // Removed selectedPlayer state, drag & drop handles selection implicitly
-        // const [selectedPlayer, setSelectedPlayer] = useState(null);
         const [gameHistory, setGameHistory] = useState([]);
-        const draggedPlayerId = useRef(null); // To store the ID of the player being dragged
+        const draggedPlayerId = useRef(null);
 
         // --- Drag and Drop Handlers ---
         const handleDragStart = (e, playerId) => {
           draggedPlayerId.current = playerId;
           e.dataTransfer.effectAllowed = 'move';
-          e.dataTransfer.setData('text/plain', playerId); // Necessary for Firefox
-          e.currentTarget.classList.add('dragging'); // Add style to dragged item
+          e.dataTransfer.setData('text/plain', playerId);
+          e.currentTarget.classList.add('dragging');
           console.log(`Drag Start: Player ${playerId}`);
         };
-
-        const handleDragOver = (e) => {
-          e.preventDefault(); // Necessary to allow dropping
-          e.dataTransfer.dropEffect = 'move';
-          e.currentTarget.classList.add('drop-zone-over'); // Highlight drop zone
-        };
-
-        const handleDragEnter = (e) => {
-          e.preventDefault();
-          e.currentTarget.classList.add('drop-zone-over');
-        };
-
-        const handleDragLeave = (e) => {
-          e.currentTarget.classList.remove('drop-zone-over');
-        };
-
+        const handleDragOver = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drop-zone-over'); };
+        const handleDragEnter = (e) => { e.preventDefault(); e.currentTarget.classList.add('drop-zone-over'); };
+        const handleDragLeave = (e) => { e.currentTarget.classList.remove('drop-zone-over'); };
         const handleDropOnCourt = (e, courtId) => {
           e.preventDefault();
           e.currentTarget.classList.remove('drop-zone-over');
           const playerId = draggedPlayerId.current;
           if (!playerId) return;
-
           console.log(`Drop on Court ${courtId}: Player ${playerId}`);
-          movePlayerToCourt(courtId, playerId); // Pass playerId directly
-          draggedPlayerId.current = null; // Clear dragged player
+          movePlayerToCourt(courtId, playerId);
+          draggedPlayerId.current = null;
         };
-
         const handleDropOnWaitingArea = (e) => {
            e.preventDefault();
            e.currentTarget.classList.remove('drop-zone-over');
            const playerId = draggedPlayerId.current;
            if (!playerId) return;
-
            console.log(`Drop on Waiting Area: Player ${playerId}`);
-           movePlayerToWaitingArea(playerId); // Pass playerId directly
-           draggedPlayerId.current = null; // Clear dragged player
+           movePlayerToWaitingArea(playerId);
+           draggedPlayerId.current = null;
         };
-
         const handleDragEnd = (e) => {
-            // Clean up dragging styles regardless of drop success
             e.currentTarget.classList.remove('dragging');
-            // Also remove hover styles from potential drop zones
             document.querySelectorAll('.drop-zone-over').forEach(el => el.classList.remove('drop-zone-over'));
             console.log("Drag End");
-            // draggedPlayerId.current = null; // Already cleared on drop
         };
 
-
-        // --- Player Management Functions (Modified for Drag & Drop) ---
-
+        // --- Player Management Functions ---
         const addPlayer = () => {
           if (newPlayerName.trim() && players.length < 20) {
             const newPlayer = { id: Date.now(), name: newPlayerName.trim(), courtId: null };
@@ -198,119 +178,102 @@
             setNewPlayerName('');
           }
         };
-
         const removePlayer = (playerId) => {
           setPlayers(players.filter(player => player.id !== playerId));
           const updatedCourts = courts.map(court => ({
-            ...court,
-            players: court.players.filter(id => id !== playerId)
+            ...court, players: court.players.filter(id => id !== playerId)
           }));
           setCourts(updatedCourts);
-          // No need to handle selectedPlayer anymore
         };
-
-        // Removed togglePlayerSelection as selection is handled by drag start
-
-        const movePlayerToCourt = (courtId, playerIdToMove) => { // Accept playerIdToMove
+        const movePlayerToCourt = (courtId, playerIdToMove) => {
           if (!playerIdToMove) return;
-
           const targetCourt = courts.find(court => court.id === courtId);
           const playerAlreadyInCourt = targetCourt.players.includes(playerIdToMove);
-
           if (targetCourt.players.length >= 4 && !playerAlreadyInCourt) {
-            alert("코트에는 최대 4명까지만 배정할 수 있습니다.");
-            return;
+            alert("코트에는 최대 4명까지만 배정할 수 있습니다."); return;
           }
-
-          // Remove player from their current court (if any)
           const updatedCourts = courts.map(court => ({
-            ...court,
-            players: court.players.filter(id => id !== playerIdToMove)
+            ...court, players: court.players.filter(id => id !== playerIdToMove)
           }));
-
-          // Add player to the target court
           const finalCourts = updatedCourts.map(court => {
-            if (court.id === courtId) {
-              // Add only if not already present (handles dropping back onto same court)
-              if (!court.players.includes(playerIdToMove)) {
-                 return { ...court, players: [...court.players, playerIdToMove] };
-              }
-            }
-            return court;
+            if (court.id === courtId && !court.players.includes(playerIdToMove)) {
+              return { ...court, players: [...court.players, playerIdToMove] };
+            } return court;
           });
-
           setCourts(finalCourts);
-
-          // Update player's courtId
           const updatedPlayers = players.map(player =>
             player.id === playerIdToMove ? { ...player, courtId: courtId } : player
           );
           setPlayers(updatedPlayers);
         };
-
-        const movePlayerToWaitingArea = (playerIdToMove) => { // Accept playerIdToMove
+        const movePlayerToWaitingArea = (playerIdToMove) => {
           if (!playerIdToMove) return;
-
-          // Remove player from any court they might be on
           const updatedCourts = courts.map(court => ({
-            ...court,
-            players: court.players.filter(id => id !== playerIdToMove)
+            ...court, players: court.players.filter(id => id !== playerIdToMove)
           }));
           setCourts(updatedCourts);
-
-          // Update player's courtId to null
           const updatedPlayers = players.map(player =>
             player.id === playerIdToMove ? { ...player, courtId: null } : player
           );
           setPlayers(updatedPlayers);
         };
 
-        // --- Game History and Reset Functions (Unchanged) ---
-        const saveCurrentGame = () => {
-          const currentGame = courts.map(court => {
-            const courtPlayers = players.filter(player =>
-              court.players.includes(player.id)
-            ).sort((a, b) => {
-              return court.players.indexOf(a.id) - court.players.indexOf(b.id);
-            });
-            const team1 = courtPlayers.filter((_, index) => index === 0 || index === 2);
-            const team2 = courtPlayers.filter((_, index) => index === 1 || index === 3);
-            return {
-              courtId: court.id, courtName: court.name,
-              team1: team1.map(p => p.name), team2: team2.map(p => p.name),
-              playerOrder: courtPlayers.map(p => p.name)
+        // --- Game Completion Logic (Per Court) ---
+        const endGameForCourt = (courtId) => {
+            const courtToEnd = courts.find(c => c.id === courtId);
+            if (!courtToEnd || courtToEnd.players.length === 0) {
+                console.log(`Court ${courtId} is empty or not found.`);
+                return;
+            }
+
+            const playersOnCourt = players.filter(p => courtToEnd.players.includes(p.id))
+                                        .sort((a, b) => courtToEnd.players.indexOf(a.id) - courtToEnd.players.indexOf(b.id));
+
+            if (playersOnCourt.length < 2) { // Require at least 2 players to record a game
+                alert("최소 2명의 선수가 있어야 게임을 기록할 수 있습니다.");
+                // Optionally still clear the court if needed, or just return
+                // return;
+            }
+
+            // Record game history for this court
+            const team1 = playersOnCourt.filter((_, index) => index === 0 || index === 2);
+            const team2 = playersOnCourt.filter((_, index) => index === 1 || index === 3);
+            const gameRecord = {
+                courtId: courtToEnd.id,
+                courtName: courtToEnd.name,
+                team1: team1.map(p => p.name),
+                team2: team2.map(p => p.name),
+                playerOrder: playersOnCourt.map(p => p.name)
             };
-          }).filter(court => court.playerOrder.length > 0);
 
-          if (currentGame.length > 0) {
-            setGameHistory([...gameHistory, {
-              id: Date.now(), timestamp: new Date().toLocaleString(), courts: currentGame
+            setGameHistory(prevHistory => [...prevHistory, {
+                id: Date.now(),
+                timestamp: new Date().toLocaleString(),
+                courts: [gameRecord] // Store only the completed court's data
             }]);
-             console.log("Game saved:", currentGame);
-          } else {
-             console.log("No active games to save.");
-          }
+            console.log(`Game ended and recorded for Court ${courtId}:`, gameRecord);
+
+            // Clear only this court
+            const updatedCourts = courts.map(c =>
+                c.id === courtId ? { ...c, players: [] } : c
+            );
+            setCourts(updatedCourts);
+
+            // Move players from this court back to waiting
+            const playerIdsToMove = playersOnCourt.map(p => p.id);
+            const updatedPlayers = players.map(p =>
+                playerIdsToMove.includes(p.id) ? { ...p, courtId: null } : p
+            );
+            setPlayers(updatedPlayers);
         };
 
-        const resetAllCourts = () => {
-          const emptyCourts = courts.map(court => ({ ...court, players: [] }));
-          setCourts(emptyCourts);
-          const updatedPlayers = players.map(player => ({ ...player, courtId: null }));
-          setPlayers(updatedPlayers);
-          // No selectedPlayer to reset
-        };
 
+        // --- Other Functions (Unchanged) ---
         const generateSamplePlayers = () => {
-          const sampleNames = [
-            '김민수', '이지연', '박준호', '최서연', '정민준', '강지훈', '윤소희', '장현우', '임지민', '한승우',
-            '오민지', '신준영', '황지영', '조현우', '서민준', '권지원', '남현우', '류지민', '문승현', '홍지원'
-          ];
-          const samplePlayers = sampleNames.map((name, index) => ({
-            id: Date.now() + index, name: name, courtId: null
-          }));
+          const sampleNames = [ '김민수', '이지연', '박준호', '최서연', '정민준', '강지훈', '윤소희', '장현우', '임지민', '한승우', '오민지', '신준영', '황지영', '조현우', '서민준', '권지원', '남현우', '류지민', '문승현', '홍지원' ];
+          const samplePlayers = sampleNames.map((name, index) => ({ id: Date.now() + index, name: name, courtId: null }));
           setPlayers(samplePlayers);
         };
-
         const waitingPlayers = players.filter(player => !player.courtId);
 
         return (
@@ -339,43 +302,25 @@
               </div>
 
               {/* 대기 선수 영역 (Drop Zone) */}
-              <div
-                className="bg-yellow-50 p-2 rounded border border-yellow-200 drop-zone"
-                onDragOver={handleDragOver}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDropOnWaitingArea}
-              >
+              <div className="bg-yellow-50 p-2 rounded border border-yellow-200 drop-zone"
+                onDragOver={handleDragOver} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDrop={handleDropOnWaitingArea}>
                 <div className="flex justify-between items-center mb-1">
                   <h2 className="font-medium text-sm">대기 선수 ({waitingPlayers.length})</h2>
-                  {/* Removed selected player indicator */}
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {waitingPlayers.map(player => (
-                    <button
-                      key={player.id}
-                      draggable="true" // Make player draggable
-                      onDragStart={(e) => handleDragStart(e, player.id)}
-                      onDragEnd={handleDragEnd}
-                      // Removed onClick selection toggle
-                      className="player-button px-2 py-1 rounded-full text-sm flex items-center bg-yellow-100 border border-yellow-300"
-                    >
+                    <button key={player.id} draggable="true" onDragStart={(e) => handleDragStart(e, player.id)} onDragEnd={handleDragEnd}
+                      className="player-button px-2 py-1 rounded-full text-sm flex items-center bg-yellow-100 border border-yellow-300">
                       <span>{player.name}</span>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); removePlayer(player.id); }}
-                        className="ml-1 text-red-600"
-                        title={`[${player.name}] 제거`}
-                      >
+                      <button onClick={(e) => { e.stopPropagation(); removePlayer(player.id); }}
+                        className="ml-1 text-red-600" title={`[${player.name}] 제거`}>
                         <span style={{ fontSize: '0.7em', verticalAlign: 'middle' }}>[X]</span>
                       </button>
                     </button>
                   ))}
-                  {waitingPlayers.length === 0 && (
-                    <span className="text-sm text-gray-500 p-1">대기 중인 선수가 없습니다</span>
-                  )}
+                  {waitingPlayers.length === 0 && (<span className="text-sm text-gray-500 p-1">대기 중인 선수가 없습니다</span>)}
                 </div>
               </div>
-              {/* Removed selection guidance text */}
             </div>
 
             {/* 본문 영역 (스크롤 가능) */}
@@ -383,28 +328,17 @@
               {/* 코트 영역 */}
               <div className="mb-6 space-y-4">
                 {courts.map(court => {
-                  const courtPlayers = players.filter(player =>
-                    court.players.includes(player.id)
-                  ).sort((a, b) => court.players.indexOf(a.id) - court.players.indexOf(b.id));
-
+                  const courtPlayers = players.filter(p => court.players.includes(p.id)).sort((a, b) => court.players.indexOf(a.id) - court.players.indexOf(b.id));
                   const team1 = courtPlayers.filter((_, index) => index === 0 || index === 2);
                   const team2 = courtPlayers.filter((_, index) => index === 1 || index === 3);
+                  const canEndGame = courtPlayers.length >= 2; // Enable button if 2 or more players
 
                   return (
-                    <div
-                      key={court.id}
-                      className="bg-green-100 p-3 rounded-lg border-2 border-green-600 drop-zone" // Make court a drop zone
-                      onDragOver={handleDragOver}
-                      onDragEnter={handleDragEnter}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => handleDropOnCourt(e, court.id)}
-                    >
+                    <div key={court.id} className="bg-green-100 p-3 rounded-lg border-2 border-green-600 drop-zone"
+                      onDragOver={handleDragOver} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDrop={(e) => handleDropOnCourt(e, court.id)}>
                       <div className="flex justify-between items-center mb-2">
                         <h3 className="text-lg font-bold">{court.name}</h3>
-                        {/* Removed "Place Here" button */}
-                        <span className="text-sm bg-white px-2 py-1 rounded-full">
-                          {courtPlayers.length}/4
-                        </span>
+                        <span className="text-sm bg-white px-2 py-1 rounded-full">{courtPlayers.length}/4</span>
                       </div>
 
                       {courtPlayers.length > 0 ? (
@@ -413,21 +347,11 @@
                             <h4 className="text-sm font-medium mb-1">입장 순서</h4>
                             <div className="flex flex-wrap gap-1">
                               {courtPlayers.map((player, idx) => (
-                                <div
-                                  key={player.id}
-                                  draggable="true" // Make players on court draggable too (to move to waiting)
-                                  onDragStart={(e) => handleDragStart(e, player.id)}
-                                  onDragEnd={handleDragEnd}
-                                  className={`player-button px-2 py-1 rounded text-sm flex items-center
-                                    ${(idx === 0 || idx === 2) ? 'bg-blue-100' : 'bg-red-100'}`}
-                                >
+                                <div key={player.id} draggable="true" onDragStart={(e) => handleDragStart(e, player.id)} onDragEnd={handleDragEnd}
+                                  className={`player-button px-2 py-1 rounded text-sm flex items-center ${(idx === 0 || idx === 2) ? 'bg-blue-100' : 'bg-red-100'}`}>
                                   <span className="font-bold mr-1">{idx + 1}.</span>
                                   <span>{player.name}</span>
-                                  <button
-                                    onClick={() => removePlayer(player.id)} // Keep remove button
-                                    className="ml-1 text-red-600"
-                                    title={`[${player.name}] 제거`}
-                                  >
+                                  <button onClick={() => removePlayer(player.id)} className="ml-1 text-red-600" title={`[${player.name}] 제거`}>
                                      <span style={{ fontSize: '0.7em', verticalAlign: 'middle' }}>[X]</span>
                                   </button>
                                 </div>
@@ -437,10 +361,7 @@
 
                           {courtPlayers.length >= 2 && (
                             <div className="bg-white p-2 rounded">
-                              <h4 className="text-sm font-medium mb-1 flex items-center">
-                                <span className="mr-1">[팀]</span>
-                                <span>팀 구성 (1-3 vs 2-4)</span>
-                              </h4>
+                              <h4 className="text-sm font-medium mb-1 flex items-center"><span className="mr-1">[팀]</span><span>팀 구성 (1-3 vs 2-4)</span></h4>
                               <div className="grid grid-cols-2 gap-1">
                                   <div className="bg-blue-50 p-1 rounded">
                                       <p className="text-xs font-medium text-blue-700">팀 1</p>
@@ -459,42 +380,26 @@
                       ) : (
                         <div className="bg-white p-4 rounded text-center text-gray-500 min-h-[50px] flex items-center justify-center">
                           <p>비어있는 코트</p>
-                          {/* Simplified message */}
                         </div>
                       )}
 
-                      {courtPlayers.length > 0 && (
-                        <div className="mt-2 flex justify-end">
+                      {/* Per-Court Game End Button */}
+                      <div className="mt-2 flex justify-end">
                           <button
-                            onClick={() => { /* Logic remains the same */
-                              const playerIdsToMove = [...court.players];
-                              const updatedCourts = courts.map(c => c.id === court.id ? { ...c, players: [] } : c);
-                              setCourts(updatedCourts);
-                              const updatedPlayers = players.map(p => playerIdsToMove.includes(p.id) ? { ...p, courtId: null } : p);
-                              setPlayers(updatedPlayers);
-                            }}
-                            className="bg-red-100 text-red-600 px-2 py-1 rounded flex items-center text-sm"
+                            onClick={() => endGameForCourt(court.id)}
+                            disabled={!canEndGame}
+                            className="bg-orange-100 text-orange-600 px-2 py-1 rounded flex items-center text-sm disabled:bg-gray-200 disabled:text-gray-400"
                           >
-                            <span className="mr-1">[초기화]</span>
-                            코트 비우기
+                            <span className="mr-1">[종료]</span>
+                            게임 종료
                           </button>
-                        </div>
-                      )}
+                      </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* 게임 관리 영역 */}
-              <div className="mb-6 flex justify-center">
-                <button
-                  onClick={() => { saveCurrentGame(); resetAllCourts(); }}
-                  className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold"
-                  disabled={players.every(p => !p.courtId)}
-                >
-                  게임 종료 및 새 게임 준비
-                </button>
-              </div>
+              {/* Removed Global Game Management Area */}
 
               {/* 게임 히스토리 */}
               {gameHistory.length > 0 && (
@@ -503,16 +408,16 @@
                   <div className="space-y-4">
                     {gameHistory.slice().reverse().map((game, index) => (
                       <div key={game.id} className="border p-3 rounded">
-                        <h3 className="font-medium">게임 #{gameHistory.length - index}: {game.timestamp}</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
-                          {game.courts.map(court => (
-                            <div key={court.courtId} className="border p-2 rounded bg-gray-50">
+                        <h3 className="font-medium">기록 #{gameHistory.length - index}: {game.timestamp}</h3>
+                        {/* History now contains an array of courts, but we only save one per entry */}
+                        {game.courts.map(court => (
+                            <div key={court.courtId} className="border p-2 rounded bg-gray-50 mt-2">
                               <p className="font-medium">{court.courtName}</p>
                               <div className="mt-1 mb-2">
-                                <p className="text-xs font-medium">입장 순서:</p>
+                                <p className="text-xs font-medium">플레이어:</p>
                                 <div className="flex flex-wrap gap-1 mt-1">
                                   {court.playerOrder.map((name, idx) => (
-                                    <span key={idx} className="text-xs bg-gray-100 px-1 rounded">{idx+1}. {name}</span>
+                                    <span key={idx} className="text-xs bg-gray-100 px-1 rounded">{name}</span>
                                   ))}
                                 </div>
                               </div>
@@ -530,7 +435,6 @@
                               </div>
                             </div>
                           ))}
-                        </div>
                       </div>
                     ))}
                   </div>
@@ -546,3 +450,30 @@
     </script>
 </body>
 </html>
+
+</final_file_content>
+
+IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
+
+<environment_details>
+# VSCode Visible Files
+badminton_hub/matching_board.html
+
+# VSCode Open Tabs
+badminton_hub/admin.html
+badminton_hub/admin.js
+badminton_hub/index.html
+badminton_hub/matching_board.html
+
+# Actively Running Terminals
+## Original command: `cd badminton_hub; git add index.html; git commit -m "Add button link to Matching Board page"; git push`
+
+# Current Time
+4/12/2025, 8:36:00 PM (Asia/Seoul, UTC+9:00)
+
+# Context Window Usage
+600,011 / 1,048.576K tokens used (57%)
+
+# Current Mode
+ACT MODE
+</environment_details>
