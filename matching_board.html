@@ -11,10 +11,18 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         body { font-family: sans-serif; margin: 0; background-color: #f9fafb; color: #374151; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
-        .sticky-top { position: sticky; top: 0; z-index: 10; background-color: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); padding: 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0; /* Remove container padding */ }
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 0.75rem; /* Reduced padding */
+        }
         .main-content { padding: 1rem; }
-        h1 { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem; text-align: center; color: #1d4ed8; }
+        h1 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; text-align: center; color: #1d4ed8; } /* Smaller H1 */
         h2 { font-weight: 500; font-size: 0.875rem; margin-bottom: 0.25rem; }
         h3 { font-size: 1.125rem; font-weight: bold; }
         h4 { font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; }
@@ -66,25 +74,30 @@
         .border-yellow-300 { border-color: #fde047; }
         .border-green-600 { border-color: #16a34a; }
         .border-blue-600 { border-color: #2563eb; }
+        .border-red-300 { border-color: #fca5a5; } /* Added for A */
+        .border-green-300 { border-color: #86efac; } /* Added for C */
+        .border-blue-300 { border-color: #93c5fd; } /* Added for E */
+        .border-gray-300 { border-color: #d1d5db; } /* Added for default */
         .bg-gray-50 { background-color: #f9fafb; }
-        .bg-gray-100 { background-color: #f3f4f6; }
+        .bg-gray-100 { background-color: #f3f4f6; } /* Default Player BG */
         .bg-gray-200 { background-color: #e5e7eb; }
         .bg-yellow-50 { background-color: #fefce8; }
-        .bg-yellow-100 { background-color: #fef9c3; }
-        .bg-green-100 { background-color: #dcfce7; }
+        .bg-yellow-100 { background-color: #fef9c3; } /* B */
+        .bg-green-100 { background-color: #dcfce7; } /* C */
         .bg-green-600 { background-color: #16a34a; }
         .bg-green-300 { background-color: #86efac; }
         .bg-blue-50 { background-color: #eff6ff; }
-        .bg-blue-100 { background-color: #dbeafe; }
+        .bg-blue-100 { background-color: #dbeafe; } /* E */
         .bg-blue-300 { background-color: #93c5fd; }
         .bg-blue-500 { background-color: #3b82f6; }
         .bg-blue-600 { background-color: #2563eb; }
         .bg-red-50 { background-color: #fef2f2; }
-        .bg-red-100 { background-color: #fee2e2; }
+        .bg-red-100 { background-color: #fee2e2; } /* A */
         .bg-purple-600 { background-color: #9333ea; }
         .bg-orange-500 { background-color: #f97316; }
         .bg-orange-100 { background-color: #ffedd5; }
         .text-white { color: white; }
+        .text-black { color: #000; } /* Ensure black text */
         .text-sm { font-size: 0.875rem; }
         .text-xs { font-size: 0.75rem; }
         .text-center { text-align: center; }
@@ -114,6 +127,55 @@
         .drop-zone-over { border-color: #2563eb; background-color: #eff6ff; } /* Blue border when dragging over */
         .dragging { opacity: 0.5; border: 2px dashed #9ca3af; } /* Style for the item being dragged */
 
+        /* Mobile Layout Adjustments */
+        .waiting-players-area { /* Target the container div */
+             max-height: 20vh; /* Limit height relative to viewport */
+             overflow-y: auto;
+             padding: 0.25rem;
+             border: 1px solid #fde047; /* Keep border */
+             border-radius: 0.375rem; /* Keep rounded corners */
+             background-color: #fefce8; /* Keep background */
+        }
+        .waiting-players-list {
+            /* Removed max-height and overflow from here */
+            padding: 0; /* Remove padding if handled by parent */
+        }
+        .court-section {
+            margin-bottom: 1rem; /* Reduce space between courts */
+        }
+        .court-details {
+            padding: 0.5rem; /* Reduce padding inside court */
+        }
+        .court-title {
+            font-size: 1rem; /* Slightly smaller court title */
+        }
+        .player-button {
+            padding: 0.25rem 0.5rem; /* Smaller player buttons */
+            font-size: 0.8rem; /* Smaller font in buttons */
+        }
+        .player-button button { /* Adjust remove button size */
+             margin-left: 0.1rem;
+        }
+        .player-button button span {
+             font-size: 0.6em;
+        }
+        .game-end-button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+        .history-entry {
+            padding: 0.5rem;
+        }
+        .history-entry h3 {
+            font-size: 0.9rem;
+        }
+        .history-court {
+            padding: 0.25rem;
+        }
+        .history-court p {
+            font-size: 0.8rem;
+        }
+
     </style>
 </head>
 <body>
@@ -121,15 +183,13 @@
 
     <script type="text/babel">
       function BadmintonMatchingBoard() {
-        const { useState, useRef } = React; // Add useRef
+        const { useState, useRef } = React;
 
         const [players, setPlayers] = useState([]);
         const [newPlayerName, setNewPlayerName] = useState('');
         const [courts, setCourts] = useState([
-          { id: 1, players: [], name: '1번 코트' },
-          { id: 2, players: [], name: '2번 코트' },
-          { id: 3, players: [], name: '3번 코트' },
-          { id: 4, players: [], name: '4번 코트' },
+          { id: 1, players: [], name: '1번 코트' }, { id: 2, players: [], name: '2번 코트' },
+          { id: 3, players: [], name: '3번 코트' }, { id: 4, players: [], name: '4번 코트' },
           { id: 5, players: [], name: '5번 코트' },
         ]);
         const [gameHistory, setGameHistory] = useState([]);
@@ -170,8 +230,9 @@
             console.log("Drag End");
         };
 
+
         // --- Player Management Functions ---
-        const addPlayer = () => {
+         const addPlayer = () => {
           if (newPlayerName.trim() && players.length < 20) {
             const newPlayer = { id: Date.now(), name: newPlayerName.trim(), courtId: null };
             setPlayers([...players, newPlayer]);
@@ -218,63 +279,60 @@
           setPlayers(updatedPlayers);
         };
 
+
         // --- Game Completion Logic (Per Court) ---
-        const endGameForCourt = (courtId) => {
+         const endGameForCourt = (courtId) => {
             const courtToEnd = courts.find(c => c.id === courtId);
             if (!courtToEnd || courtToEnd.players.length === 0) {
                 console.log(`Court ${courtId} is empty or not found.`);
                 return;
             }
-
             const playersOnCourt = players.filter(p => courtToEnd.players.includes(p.id))
                                         .sort((a, b) => courtToEnd.players.indexOf(a.id) - courtToEnd.players.indexOf(b.id));
-
-            if (playersOnCourt.length < 2) { // Require at least 2 players to record a game
+            if (playersOnCourt.length < 2) {
                 alert("최소 2명의 선수가 있어야 게임을 기록할 수 있습니다.");
-                // Optionally still clear the court if needed, or just return
-                // return;
+                // return; // Decide if court should still be cleared
             }
-
-            // Record game history for this court
             const team1 = playersOnCourt.filter((_, index) => index === 0 || index === 2);
             const team2 = playersOnCourt.filter((_, index) => index === 1 || index === 3);
             const gameRecord = {
-                courtId: courtToEnd.id,
-                courtName: courtToEnd.name,
-                team1: team1.map(p => p.name),
-                team2: team2.map(p => p.name),
+                courtId: courtToEnd.id, courtName: courtToEnd.name,
+                team1: team1.map(p => p.name), team2: team2.map(p => p.name),
                 playerOrder: playersOnCourt.map(p => p.name)
             };
-
             setGameHistory(prevHistory => [...prevHistory, {
-                id: Date.now(),
-                timestamp: new Date().toLocaleString(),
-                courts: [gameRecord] // Store only the completed court's data
+                id: Date.now(), timestamp: new Date().toLocaleString(), courts: [gameRecord]
             }]);
             console.log(`Game ended and recorded for Court ${courtId}:`, gameRecord);
-
-            // Clear only this court
-            const updatedCourts = courts.map(c =>
-                c.id === courtId ? { ...c, players: [] } : c
-            );
+            const updatedCourts = courts.map(c => c.id === courtId ? { ...c, players: [] } : c);
             setCourts(updatedCourts);
-
-            // Move players from this court back to waiting
             const playerIdsToMove = playersOnCourt.map(p => p.id);
-            const updatedPlayers = players.map(p =>
-                playerIdsToMove.includes(p.id) ? { ...p, courtId: null } : p
-            );
+            const updatedPlayers = players.map(p => playerIdsToMove.includes(p.id) ? { ...p, courtId: null } : p);
             setPlayers(updatedPlayers);
         };
 
 
-        // --- Other Functions (Unchanged) ---
+        // --- Other Functions ---
         const generateSamplePlayers = () => {
-          const sampleNames = [ '김민수', '이지연', '박준호', '최서연', '정민준', '강지훈', '윤소희', '장현우', '임지민', '한승우', '오민지', '신준영', '황지영', '조현우', '서민준', '권지원', '남현우', '류지민', '문승현', '홍지원' ];
+          const sampleNames = [ '김민수A', '이지연B', '박준호C', '최서연E', '정민준', '강지훈A', '윤소희B', '장현우C', '임지민E', '한승우', '오민지A', '신준영B', '황지영C', '조현우E', '서민준', '권지원A', '남현우B', '류지민C', '문승현E', '홍지원' ]; // Added letters for testing
           const samplePlayers = sampleNames.map((name, index) => ({ id: Date.now() + index, name: name, courtId: null }));
           setPlayers(samplePlayers);
         };
+
         const waitingPlayers = players.filter(player => !player.courtId);
+
+        // --- Helper Function for Player Button Color ---
+        const getPlayerButtonClass = (playerName) => {
+            const nameUpper = playerName.toUpperCase();
+            // Define base classes first
+            let baseClasses = 'player-button px-2 py-1 rounded-full flex items-center border ';
+            if (nameUpper.includes('A')) return baseClasses + 'bg-red-100 border-red-300 text-black';
+            if (nameUpper.includes('B')) return baseClasses + 'bg-yellow-100 border-yellow-300 text-black';
+            if (nameUpper.includes('C')) return baseClasses + 'bg-green-100 border-green-300 text-black';
+            if (nameUpper.includes('E')) return baseClasses + 'bg-blue-100 border-blue-300 text-black';
+            return baseClasses + 'bg-gray-100 border-gray-300 text-black'; // Default color
+        };
+
 
         return (
           <div className="container">
@@ -282,35 +340,37 @@
             <div className="sticky-top">
               <h1>배드민턴 매칭 프로그램</h1>
               {/* 선수 등록 영역 */}
-              <div className="mb-4">
+              <div className="mb-2"> {/* Reduced margin */}
                 <div className="flex">
                   <input type="text" value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)}
-                    placeholder="선수 이름을 입력하세요" className="flex-1 p-2 border rounded-l" maxLength={10}
+                    placeholder="선수 이름" className="flex-1 p-2 border rounded-l text-sm" maxLength={10} /* Smaller text */
                     onKeyPress={(e) => e.key === 'Enter' && addPlayer()} />
                   <button onClick={addPlayer} disabled={players.length >= 20 || !newPlayerName.trim()}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-r disabled:bg-blue-300">
+                    className="bg-blue-600 text-white px-3 py-2 rounded-r disabled:bg-blue-300 text-sm"> {/* Smaller text/padding */}
                     추가
                   </button>
                 </div>
-                <div className="mt-2 flex justify-between">
+                <div className="mt-1 flex justify-between"> {/* Reduced margin */}
                   <button onClick={generateSamplePlayers} disabled={players.length > 0}
-                    className="bg-green-600 text-white px-3 py-1 rounded text-sm disabled:bg-green-300">
+                    className="bg-green-600 text-white px-2 py-1 rounded text-xs disabled:bg-green-300"> {/* Smaller button */}
                     샘플 선수 생성
                   </button>
-                  <div className="text-sm text-gray-500">선수: {players.length}/20</div>
+                  <div className="text-xs text-gray-500"> {/* Smaller text */}
+                    선수: {players.length}/20
+                  </div>
                 </div>
               </div>
 
-              {/* 대기 선수 영역 (Drop Zone) */}
-              <div className="bg-yellow-50 p-2 rounded border border-yellow-200 drop-zone"
+              {/* 대기 선수 영역 (Drop Zone & Scrollable) */}
+              <div className="waiting-players-area drop-zone" // Added waiting-players-area class
                 onDragOver={handleDragOver} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDrop={handleDropOnWaitingArea}>
                 <div className="flex justify-between items-center mb-1">
                   <h2 className="font-medium text-sm">대기 선수 ({waitingPlayers.length})</h2>
                 </div>
-                <div className="flex flex-wrap gap-1">
+                <div className="waiting-players-list flex flex-wrap gap-1"> {/* Added waiting-players-list class */}
                   {waitingPlayers.map(player => (
                     <button key={player.id} draggable="true" onDragStart={(e) => handleDragStart(e, player.id)} onDragEnd={handleDragEnd}
-                      className="player-button px-2 py-1 rounded-full text-sm flex items-center bg-yellow-100 border border-yellow-300">
+                      className={getPlayerButtonClass(player.name)}> {/* Apply color class */}
                       <span>{player.name}</span>
                       <button onClick={(e) => { e.stopPropagation(); removePlayer(player.id); }}
                         className="ml-1 text-red-600" title={`[${player.name}] 제거`}>
@@ -331,24 +391,24 @@
                   const courtPlayers = players.filter(p => court.players.includes(p.id)).sort((a, b) => court.players.indexOf(a.id) - court.players.indexOf(b.id));
                   const team1 = courtPlayers.filter((_, index) => index === 0 || index === 2);
                   const team2 = courtPlayers.filter((_, index) => index === 1 || index === 3);
-                  const canEndGame = courtPlayers.length >= 2; // Enable button if 2 or more players
+                  const canEndGame = courtPlayers.length >= 2;
 
                   return (
-                    <div key={court.id} className="bg-green-100 p-3 rounded-lg border-2 border-green-600 drop-zone"
+                    <div key={court.id} className="court-section bg-green-100 p-3 rounded-lg border-2 border-green-600 drop-zone"
                       onDragOver={handleDragOver} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDrop={(e) => handleDropOnCourt(e, court.id)}>
                       <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-lg font-bold">{court.name}</h3>
+                        <h3 className="court-title text-lg font-bold">{court.name}</h3>
                         <span className="text-sm bg-white px-2 py-1 rounded-full">{courtPlayers.length}/4</span>
                       </div>
 
                       {courtPlayers.length > 0 ? (
-                        <>
-                          <div className="bg-white p-2 rounded mb-2">
+                        <div className="court-details space-y-2"> {/* Added court-details class */}
+                          <div className="bg-white p-2 rounded">
                             <h4 className="text-sm font-medium mb-1">입장 순서</h4>
                             <div className="flex flex-wrap gap-1">
                               {courtPlayers.map((player, idx) => (
                                 <div key={player.id} draggable="true" onDragStart={(e) => handleDragStart(e, player.id)} onDragEnd={handleDragEnd}
-                                  className={`player-button px-2 py-1 rounded text-sm flex items-center ${(idx === 0 || idx === 2) ? 'bg-blue-100' : 'bg-red-100'}`}>
+                                  className={getPlayerButtonClass(player.name)}> {/* Apply color class */}
                                   <span className="font-bold mr-1">{idx + 1}.</span>
                                   <span>{player.name}</span>
                                   <button onClick={() => removePlayer(player.id)} className="ml-1 text-red-600" title={`[${player.name}] 제거`}>
@@ -376,30 +436,27 @@
                               </div>
                             </div>
                           )}
-                        </>
+                           {/* Per-Court Game End Button */}
+                           <div className="mt-2 flex justify-end">
+                              <button
+                                onClick={() => endGameForCourt(court.id)}
+                                disabled={!canEndGame}
+                                className="game-end-button bg-orange-100 text-orange-600 px-2 py-1 rounded flex items-center disabled:bg-gray-200 disabled:text-gray-400"
+                              >
+                                <span className="mr-1">[종료]</span>
+                                게임 종료
+                              </button>
+                          </div>
+                        </div>
                       ) : (
                         <div className="bg-white p-4 rounded text-center text-gray-500 min-h-[50px] flex items-center justify-center">
                           <p>비어있는 코트</p>
                         </div>
                       )}
-
-                      {/* Per-Court Game End Button */}
-                      <div className="mt-2 flex justify-end">
-                          <button
-                            onClick={() => endGameForCourt(court.id)}
-                            disabled={!canEndGame}
-                            className="bg-orange-100 text-orange-600 px-2 py-1 rounded flex items-center text-sm disabled:bg-gray-200 disabled:text-gray-400"
-                          >
-                            <span className="mr-1">[종료]</span>
-                            게임 종료
-                          </button>
-                      </div>
                     </div>
                   );
                 })}
               </div>
-
-              {/* Removed Global Game Management Area */}
 
               {/* 게임 히스토리 */}
               {gameHistory.length > 0 && (
@@ -407,11 +464,10 @@
                   <h2 className="text-xl font-semibold mb-4">게임 기록</h2>
                   <div className="space-y-4">
                     {gameHistory.slice().reverse().map((game, index) => (
-                      <div key={game.id} className="border p-3 rounded">
+                      <div key={game.id} className="history-entry border p-3 rounded">
                         <h3 className="font-medium">기록 #{gameHistory.length - index}: {game.timestamp}</h3>
-                        {/* History now contains an array of courts, but we only save one per entry */}
                         {game.courts.map(court => (
-                            <div key={court.courtId} className="border p-2 rounded bg-gray-50 mt-2">
+                            <div key={court.courtId} className="history-court border p-2 rounded bg-gray-50 mt-2">
                               <p className="font-medium">{court.courtName}</p>
                               <div className="mt-1 mb-2">
                                 <p className="text-xs font-medium">플레이어:</p>
@@ -450,30 +506,3 @@
     </script>
 </body>
 </html>
-
-</final_file_content>
-
-IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
-
-<environment_details>
-# VSCode Visible Files
-badminton_hub/matching_board.html
-
-# VSCode Open Tabs
-badminton_hub/admin.html
-badminton_hub/admin.js
-badminton_hub/index.html
-badminton_hub/matching_board.html
-
-# Actively Running Terminals
-## Original command: `cd badminton_hub; git add index.html; git commit -m "Add button link to Matching Board page"; git push`
-
-# Current Time
-4/12/2025, 8:36:00 PM (Asia/Seoul, UTC+9:00)
-
-# Context Window Usage
-600,011 / 1,048.576K tokens used (57%)
-
-# Current Mode
-ACT MODE
-</environment_details>
