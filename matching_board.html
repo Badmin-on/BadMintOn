@@ -376,12 +376,16 @@
               <h1>배드민턴 매칭 프로그램</h1>
               {/* 선수 등록 영역 */}
               <div className="mb-2"> {/* Reduced margin */}
-                <div className="flex">
-                  <input type="text" value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)}
-                    placeholder="선수 이름 (한번에 여러명 붙여넣기 가능)" className="flex-1 p-2 border rounded-l text-sm" /* Removed maxLength */
-                    onKeyPress={(e) => e.key === 'Enter' && addPlayer()} />
+                <div className="flex items-stretch"> {/* Use items-stretch to make textarea height match button */}
+                  {/* Changed input to textarea */}
+                  <textarea value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)}
+                    placeholder="선수 이름 (한 명씩 입력하거나, 여러 명 명단을 붙여넣기)"
+                    className="flex-1 p-2 border rounded-l text-sm"
+                    rows={1} // Start with one row, allow expansion if needed
+                    style={{ resize: 'vertical', minHeight: '38px' }} // Allow vertical resize, match button height
+                  ></textarea>
                   <button onClick={addPlayer} disabled={players.length >= 20 || !newPlayerName.trim()}
-                    className="bg-blue-600 text-white px-3 py-2 rounded-r disabled:bg-blue-300 text-sm"> {/* Smaller text/padding */}
+                    className="bg-blue-600 text-white px-3 py-2 rounded-r disabled:bg-blue-300 text-sm self-stretch"> {/* Use self-stretch */}
                     추가
                   </button>
                 </div>
