@@ -378,7 +378,7 @@
               <div className="mb-2"> {/* Reduced margin */}
                 <div className="flex">
                   <input type="text" value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)}
-                    placeholder="선수 이름" className="flex-1 p-2 border rounded-l text-sm" maxLength={10} /* Smaller text */
+                    placeholder="선수 이름 (한번에 여러명 붙여넣기 가능)" className="flex-1 p-2 border rounded-l text-sm" /* Removed maxLength */
                     onKeyPress={(e) => e.key === 'Enter' && addPlayer()} />
                   <button onClick={addPlayer} disabled={players.length >= 20 || !newPlayerName.trim()}
                     className="bg-blue-600 text-white px-3 py-2 rounded-r disabled:bg-blue-300 text-sm"> {/* Smaller text/padding */}
