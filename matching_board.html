@@ -233,11 +233,46 @@
 
         // --- Player Management Functions ---
          const addPlayer = () => {
-          if (newPlayerName.trim() && players.length < 20) {
-            const newPlayer = { id: Date.now(), name: newPlayerName.trim(), courtId: null };
-            setPlayers([...players, newPlayer]);
-            setNewPlayerName('');
+          const trimmedInput = newPlayerName.trim();
+          if (!trimmedInput) return; // Exit if input is empty after trimming
+
+          const currentPlayersCount = players.length;
+          const availableSlots = 20 - currentPlayersCount;
+          if (availableSlots <= 0) {
+              alert("최대 선수 인원(20명)에 도달했습니다.");
+              return;
           }
+
+          let playersToAdd = [];
+          // Check if input contains multiple lines
+          if (trimmedInput.includes('\n')) {
+              const names = trimmedInput.split('\n')
+                                      .map(name => name.trim()) // Trim whitespace from each name
+                                      .filter(name => name); // Filter out empty strings
+
+              // Limit the number of players to add based on available slots
+              const namesToAdd = names.slice(0, availableSlots);
+
+              playersToAdd = namesToAdd.map((name, index) => ({
+                  id: Date.now() + index, // Ensure unique IDs for batch add
+                  name: name,
+                  courtId: null
+              }));
+
+              if (names.length > availableSlots) {
+                  alert(`최대 20명까지 등록 가능합니다. ${availableSlots}명만 추가되었습니다.`);
+              }
+          } else {
+              // Single player add logic (if no newlines)
+              if (currentPlayersCount < 20) {
+                  playersToAdd.push({ id: Date.now(), name: trimmedInput, courtId: null });
+              }
+          }
+
+          if (playersToAdd.length > 0) {
+              setPlayers(prevPlayers => [...prevPlayers, ...playersToAdd]);
+          }
+          setNewPlayerName(''); // Clear input field
         };
         const removePlayer = (playerId) => {
           setPlayers(players.filter(player => player.id !== playerId));
